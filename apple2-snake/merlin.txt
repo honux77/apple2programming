@@ -1,0 +1,17 @@
+= apple2 merlin 사용법
+== disk1 에 merlin 삽입
+== disk2 에 빈 디스크 사입
+== 부팅
+- 드라이브 교체: D
+- 에디트 모드: E
+- 라인 추가: A
+- 연속*: ctrl + p
+- 시작끝*: space, ctrl + p
+- 엔터: 에디트 중지
+- L: 리스트
+- ASM: 어셈블
+- Save
+- Object Save
+- Catalog
+- Quit
+- Brun 프로그램이름
