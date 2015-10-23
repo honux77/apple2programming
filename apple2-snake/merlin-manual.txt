@@ -1,0 +1,3817 @@
+
+Merlin: Macro Assembler for the Apple II Family
+by Glen Bredon
+
+Manual (for early versions)
+scans by GS WorldView
+
+
+1.  Introduction
+2.  System Requirements
+3.  Beginners guide to Using MERLIN
+4.  Sample Program
+5.  The EDITOR
+6.  The Assembler
+7.  Macros
+8.  Technical Information (highlights)
+9.  SOURCEROR
+
+
+
+
+1.  Introduction
+
+1.1  Assembly Language Whys and Wherefores
+
+Some of you may ask "What is Assembly Language?" or "Why do I  need
+to  use  Assembly  Language; BASIC suites me fine?" While we do not
+have the space here to do  a  treatise  on  the  subject,  we  will
+attempt to briefly answer the above questions.
+
+Computer languages are often referred to as  "high level" or "  low
+level"  languages.  BASIC,  COBOL, FORTRAN, and PASCAL are all high
+level languages.  A high level language is one  that  usually  uses
+English  like words (commands) and may go through several stages of
+interpretation  or  compilation  before  finally  being  placed  in
+memory.
+
+Up to the present time, such a process  has  "ALWAYS"  resulted  in
+programs  that  execute slower and consume a great deal more memory
+than a well written assembly  language  program.   As  the  art  of
+programming  progresses  we will probably see the day when a "good"
+programmer will have a hard time beating a top drawer compiler on a
+given problem. Until that time there will be plenty of room for the
+dedicated assembly language programmer to ply his/her craft.
+
+
+1.2  The 6502 Processor
+
+The 6502  microprocessor  has  five  eight-bit  registers  and  one
+sixteen  bit  register  in the Arithmetic and Logic Unit (ALU). All
+data is ultimately  handled  through  these  registers.  Even  this
+lowest of low level code requires a "program" in order  to function
+correctly.  This program is hard wired within the 6502  itself.   A
+program instruction goes through three distinct steps:
+
+  1.  The address of the next instruction is sent  to  the  RAM/ROM
+      memory.   This  is  called  the  "fetch"  cycle.  The  memory
+      device(s) respond by sending the contents  of  the  addressed
+      location(s) back to the Central Processing Unit (CPU).
+
+  2.  The CPU decodes it (figures out what is  being  requested  by
+      the instruction) and activates various gates and/flip flops.
+
+  3.  Finally, we enter the "Execution  phase"  where  the  actions
+      called for by the instruction are carried out.
+
+
+1.3  Programming Evolution
+
+A program instruction resides in memory as a  one,  two,  or  three
+byte  group.   A  byte  contains  eight binary; bits of data and is
+usually notated in  hexadecimal  (base  16)  form  (as  opposed  to
+decimal,  octal,  or  binary).   Please note that there is a strong
+relationship between hexadecimal, octal and  binary.  The  assembly
+language programmer is expected to be conversant in all three.
+
+Some early microcomputers allowed program and/or  data  entry  only
+through  front  panel  switches.   This  was  supplanted shortly by
+processors where one "only" had to insert a "boot" program in  this
+fashion.  Once  the boot was loaded the processor could perform the
+job of reading further program and/or data in a more civilized way.
+At  the  next  step  up,  the user was allowed to enter the program
+instructions  as  a  mixture   of   alphabetic   instructions   and
+hexadecimal addresses/data for the operand.  The Apple ][ and Apple
+][+ had a built in mini-assembler that  permitted  simple  assembly
+language programming.  The assembler is missing from the Apple //e.
+
+However, the mini- assembler was not sufficient to  create  a  long
+and  comprehensive  program.  In  addition  to  allowing  input  of
+instructions  in  a  alphabetic  mnemonic  code,  a  full   fledged
+assembler allows the programmer to use "labels", which represent an
+as yet undefined area of memory where a particular segment  of  the
+program  will  be  stored.  In  addition,  an assembler will have a
+provision for line numbers, similar to those in  a  BASIC  program,
+which  in  turn  permit  the  programmer  to  insert lines into the
+program  and  perform  other   editing   operations   relative   to
+operations/instructions  already  in  the  program.   This  is what
+Merlin is all about.
+
+Before using this or any other assembler, the user is  expected  to
+be   somewhat   familiar  with  the  6502  architecture,  modes  of
+addressing, etc. This manual is  not  intended  to  teach  assembly
+language   programming.  Many  good  books  on  the  6502  assembly
+programming ar available at your local dealer; some are  referenced
+later in this section.
+
+
+1.4  Background and Features of Merlin
+
+Merlin is a "TED-based" editor-assembler.  This means that while it
+is  essentially  new  from the ground up, it adheres to and follows
+almost all of the conventions associatd with TED ][+, in  terms  of
+command mnemonics, pseudo-op's, etc.
+
+The original TED ASM was  written  by  Randy  Wiggington  and  Gary
+Shannon. It has been widely distributed "under the counter" by user
+groups and individuals, under many  names,  and  in  a  variety  of
+versions.  Seemingly,  each  person  added his own enhancements and
+improvements. Merlin is no exception.  Representing  a  major  step
+forward,  with  the addition of macro capability, Merlin appears on
+the scene now  as  one  of  the  most  advanced  and  sophisticated
+editor-assemblers for the Apple ][, yet retains all the easy to use
+features of TED that make it desirable to the beginner in  assembly
+language programming.
+
+Significant changes in Merlin, in addition to macros,  include  the
+use  of  the  logical  operators  AND,  OR,  and  EOR, and the math
+operators for division, the ability  to  list  a  program  with  or
+without line numbers, and substantially faster editing.  Similarly,
+the edit modules now include many additional commands to facilitate
+editing  and  the  "Read"  command allows any Apple text file to be
+read into the edit buffer, thus permitting the use of source  files
+from other assemblers, such as DOS Tool Kit.
+
+Merlin assumes that your system has  at  last  48K  of  memory  and
+operates  under  3.3  DOS.  BEWARE of custom DOS's.  Merlin does an
+automatic MAXFILES 2 upon entry, then reverts to the usual value on
+exit.
+
+
+1.5  Suggested Reading
+
+  1.  SYSTEM MONITOR Apple Computing, inc. Peeking  at  Call-Apple,
+      Vol I.
+
+  2.  APPLE II MINI ASSEMBLER Apple Computer Inc. Peeking at  Call-
+      Apple Synertek Programming Manual., Synertek 6500-20.
+
+  3.  PROGRAMING THE 6502 Rodney Zaks, Sybex C-202.
+
+  4.  THE APPLE MONITOR PEELED Wm  E.  Dougherty,  Apple  Computer,
+      Inc.
+
+  5.  A HEX ON THEE Val J. Golding, Peeking at Call-Apple, Vol II.
+
+  6.  FLOATING POINT PACKAGE Apple Computer, Inc., The Wozpak II.
+
+  7.  FLOATING POINT LINKAGE ROUTINES  Don  williams,  Peeking   at
+      Call-Apple Vol I
+
+  8.  APPLE ][ and //e REFERENCE MANUALS Apple Computer, Inc.
+
+  9.  ASSEMBLY LINES
+          by Rodger Wagner
+      A continuing series of tutorial articles in SOFTALK magazine.
+      An  excellent  introduction, easy to follow for the beginning
+      language programmer.
+
+ 10.  ASSEMBLY LINES: THE BOOK by Rodger Wagner  A  compilation  of
+      the  first  eighteen  issues of the assembly lines series. In
+      addition, the text has been extensively edited and an  unique
+      encyclopedia-like  appendix  has  been  added.  This appendix
+      shows not only the basic details of each  6502  command,  but
+      also  a  brief  discussion of its most common uses along with
+      concise, illustrative listings.
+
+ 11.  CONVERTING BRAND X TO BRAND Y by Randall Hyde Apple  Orchard,
+      Vol   I,  No.  I,  Mar/Apr  1980.  Usefull  notes  and  cross
+      references on converting among assemblers.
+
+ 12.  CONVERTING INTEGER BASIC PROGRAMS TO ASSEMBLY LANGAUAGE    by
+      Randall Hyde Apple Orchard, as above.
+
+ 13.  HOW TO ENTER CALL-APPLE ASSEMBLY LANGUAGE LISTINGS      call-
+      Apple, Vol IV, No. 1, Jan 1981
+
+ 14.  MACHINE TOOLS Call-Apple in Depth, No 1.
+
+
+
+
+2.  System Requirements
+
+   W 48K Apple ][
+
+   W 16K RAM Card
+
+   W 80 Column Board (optional)
+
+   W Lower Case Board (optional)
+
+
+2.1  Hardware Compatability List
+
+   W VIDEX VIDEOTERM
+
+   W FULL VIEW 80 (80 column board)
+
+   W M & R SUP'R'TERMINAL (80 column board)
+
+   W ALS SMARTERM (80 column board)
+
+   W OMEGA MICROWARE RAMTEX 16 (16k RAM board)
+
+   W ANDROMEDA 16K BOARD
+
+   W MICROSOFT 16K BOARD
+
+   W WIZARD 80 (80 column board)
+
+
+Please note that Merlin  has  been  tested  with  the  cards/boards
+listed  above.   The author makes no guarantees with respect to the
+operation of Merlin with any 80 column boards not listed.
+
+A noteable exception in the above, is the Apple 80 column card!  Do
+not  despair,  for  the  Apple  80  column  simply select the Videx
+Videoterm and a block cursor and all is well.
+
+
+
+
+3.  Beginners guide to Using MERLIN
+
+Notes and demonstrations for the beginning programmer
+
+3.1  Introduction
+
+The purpose of this section  is   not  to  provide  instruction  in
+assembly language programming. Rather, it is to introduce MERLIN to
+programmers new to assembly language programming  in  general,  and
+MERLIN in particular.
+
+This section does not attempt to present demonstrations of each and
+every  command  option.  Instead,  the  objective is to clarify and
+present examples of  the  more  common  operations,  sufficient  to
+provide  a  basis  for further independent study on the part of the
+programmer.
+
+a note of clarification:
+
+Throughout the MERLIN manual, various uses are made  of  the  terms
+"mode" and "module."
+
+In this section, module  refers  to  a  distinct  computer  program
+component of the MERLIN system. The four modules are:
+
+  1.  Executive
+
+  2.  Editor
+
+  3.  Assembler
+
+  4.  Symbol Table Generator
+
+Each of the above modules is grouped under one of the  two  CONTROL
+MODES:
+
+  1.  The Executive, abbreviated EXEC  and  indicated  by  the  "%"
+      prompt.
+
+         W Executive Module
+
+  2.  The Editor, indicated by the ":" prompt (which is very  teeny
+      tiny in the 80 column mode of your Apple).
+
+         W Editor Module
+
+         W Assembler Module
+
+         W Symbol Table Module
+
+In MERLIN, the term  mode  is  used  in  a  recursive  sense.   For
+example,  when you are in the EXEC mode and type "E", you enter the
+Editor Control Mode (":" prompt). If you  then  type  "A[dd]",  you
+enter  the  "ADD"  mode.   Some time later, you will enter a "NULL"
+line which will move you back into the Editor Control Mode.
+
+
+The above, after a  few  moments  reflection,  is  both  clear  and
+sensible.   However,  there  is  one mode movement that can lead to
+confusion if the words are not read clearly.  That movement is when
+you  move  from  the  Editor Control Mode (often referred to as the
+EDITOR) to the "EDIT" mode.  The separator  tabs  for  this  manual
+don't help this confusion factor much when they refer to the Editor
+Control Mode as "EDITOR". Sorry about that. However, pay attention,
+you have been warned.
+
+
+3.2  Input
+
+Programmers familiar with some assembly and higher level  languages
+will  recall  the  necessity  of formatting the input, i.e. labels,
+opcodes, operands, and comments must be entered (typed) in specific
+fields or they will not be recognized by the assembler program.
+
+In MERLIN, the TABS operator (command)  provides  a  semi-automatic
+formatting feature.
+
+When entering a program, remember that during assembly  each  space
+in  the source causes a tab to the next tab field. Two spaces where
+you meant one will (hopefully) not cause an  assembler  error  when
+you  later type "ASM".  If due to mischance, the error on input did
+cause an assembly error, you will be witness to the playing of  the
+SDS death song.
+
+The real harm of extra spaces is the amount of disk storage wasted.
+If  you  are  prone  to typing extra spaces, investigate the Change
+command in the EDITOR.  It  allows  matching  for  two  spaces  and
+replacement by one.
+
+
+
+
+4.  Sample Program
+
+The first step is to "boot" MERLIN by any of the  numerous  methods
+available   (power   cycling,  PR#6,  CNTRL-OPEN-APPLE-RESET,  BRUN
+MERLIN).  In any case, you should end up in the Executive mode with
+the   "%"  prompt.   If  unsuccessful  in  this, consult your Apple
+Manual, etc.  Assuming success, perform the following steps:
+
+  1.  Type a single capital 'E', this will place you in the  Editor
+      Control  Mode  (which  will  be called [the] Editor from this
+      point forward) with the ":" prompt.
+
+  2.  Type a single "A" and press RETURN. This will put you in  the
+      ADD  mode.  There will be a "1", for line one, to the left of
+      the curser.
+
+  3.  Enter a "*" (asterisk). An asterisk as a first character of a
+      line tells the assembler that this is a comment (REMark) line
+      and anything after the asterisk is to be ignored.  To confirm
+      this,  continue by typing "DEMO PROGRAM 1" and hit the RETURN
+      key.  (I don't really mean that you should "hit"  the  return
+      key,  rather  I  mean  that  you should gently press it as an
+      indication to your Apple that you are finished with a line of
+      input.  In fact, I'm already suffering ennui about mentioning
+      it at all. How about I just say <R> when  its  time  for  our
+      friend  the  RETURN key? Good. By the way, I will continue to
+      ask you to "hit" certain keys. Just take my word for it, they
+      deserve it).
+
+  4.  You will now see that the cursor has dropped  down  one  line
+      and there is a "2" just to the left.
+
+  5.  Hit the space bar and type "OBJ", space once more, then  $300
+      <R>.   Note  that the use of OBJ is discouraged in most cases
+      because it is neither required nor desirable.
+
+      "Why!" You cry; are you using OBJ? "Because  we  are  getting
+      tricky so this demo doesn't get out of hand with details that
+      are better left to much later." So there!
+
+  6.  Spaces are becoming more of a problem than the RETURN key. If
+      it's alright with you, I'll use <sp> from here on.
+
+      Type:<sp>ORG<sp>$300<R>
+
+  7.  Type:BELL<sp>EQU<sp>$F8DD<R>  Note that "BELL" is a label and
+      is typed with no leading spaces.
+
+  8.  Type:START<sp>JSR<sp>BELL<sp>;RING THE BELL<R>       Note the
+      semicolon.  It marks the start of the comment (REMark) field.
+      You do not HAVE to use the semicolon. However, convention and
+      good  taste  dictate  that  you  should.  In  addition, using
+      editors on program text files is often made  much  easier  by
+      having  a unique character delimit the start of the [comment]
+      field.
+
+  9.  Type:END<sp>RTS<R>
+
+ 10.  The program has been completely entered, but  the  system  is
+      still  in  the  ADD mode. To exit ADD,Type:<R> or CNTRL-X<R>.
+      The ":"  prompt  will  reappear,  indicating  that  you  have
+      returned to the EDITOR.
+
+ 11.  The screen should now look like this:
+
+      1 *DEMO PROGRAM 1
+
+      2       OBJ     $300
+
+      3       ORG     $300
+
+      4 BELL  EQU     $F8DD
+
+      5 START JSR     BELL    ;RING THE BELL
+
+      6 END   RTS
+
+      Note that each string of  characters  has  been  moved  to  a
+      specific  field.   There  are four such fields, not including
+      the line numbers which are on the left.  The fields and their
+      uses are:
+
+        1.  Label field; BELL,  START,  and  END  are  examples  of
+            labels.   Line  1,  which is totally comments, does NOT
+            have ANY fields since it is ignored by the assembler.
+
+        2.  Opcode field. JSR and RTS are opcodes, an opcode  is  a
+            mnemonic  (aid)  that stands for a predefined operation
+            of the 6502 micro processor.  When the assembler "sees"
+            an  opcode,  it will generate one or more bytes of data
+            in the program. These bytes  will  cause  the  6502  to
+            perform the operation described for the stated mnemonic
+            in standard programming manuals.
+
+            On the  other  hand,  OBJ,  ORG,  and  EQU  are  called
+            pseudo-op's.  A  pseudo  op  is  an  instruction to the
+            assembler rather than  the  processor  being  assembled
+            for.   A pseudo op may or may not result in bytes being
+            placed into the program.  None of the pseudo op's  used
+            in  this demo program resulted in the direct generation
+            of  code. However, they  did  convey  information  that
+            will be used in the code generation process.
+
+            In the pure sense of a pseudo op, no executable code is
+            ever  a  direct  result of a pseudo op.  This is not to
+            say you could not specify an entire program  using  the
+            "HEX"  pseudo  op; rather one could say "that is a dumb
+            way to do it."
+
+            In summary, a line of  code  consists  of  one  of  the
+            following:
+
+            LABEL<sp>OPCODE<sp>OPERAND<sp>;COMMENT
+
+            LABEL<sp>OPCODE<sp>OPERAND
+
+            LABEL<sp>OPCODE<sp>;COMMENT
+
+            LABEL<sp>OPCODE
+
+            <sp>OPCODE<sp>OPERAND<sp>;COMMENT
+
+            <sp>OPCODE<sp>OPERAND
+
+            <sp>OPCODE<sp>;COMMENT
+
+            <sp>OPCODE
+
+            <sp>;COMMENT
+
+            *COMMENT
+
+
+4.1  Verification
+
+In the example shown here, the program is short and thus  is  still
+on  the  screen  at  the  completion  of  the Add mode.  For longer
+programs you will use various  tools  provided  by  the  EDITOR  to
+verify  that the entered code is what was intended.  We will sample
+some of these tools now.
+
+Type:L[ist]<R> a copy of the program will be listed on the screen.
+
+Type:I5<R> This will cause you to go into the insert mode. You will
+          be  inserting  IN  FRONT of the present line 5. Note that
+          the line number to the left of  the  cursor  is  5.  This
+          means  that  the  first line you type will become the new
+          line 5. The old line 5 and all subsequent lines will have
+          one  added  to  their  line  numbers. Lines above will be
+          unchanged. While the foregoing  may  seem  basic,  it  is
+          essential that you have a firm grasp of these concepts in
+          order  to  interact  with  the  EDITOR  in   a   mutually
+          beneficial fashion.
+
+Type:*<R>   Note that you are still in the insert mode.  This  will
+          be true until we tell you how to exit in a moment.
+
+Type:*<R>
+
+Type:<sp>TYA<R>
+
+Type:<R>  This is one of the methods of exiting the Insert (or Add)
+          mode.   There  are two others (I don't know why there are
+          two, there just are), CTRL-X and CTRL-C. (^X and ^C  from
+          now on. Aren't I the laziest devil?)
+
+          Looking ahead. If you wish to exit the EDIT mode prior to
+          the   line[s]   specified  (perhaps  you  have  typed  an
+          intemperate phrase), use ^X or ^C.  I would  use  one  or
+          the  other  in all cases so panic doesn't set in when you
+          have destroyed a line the moment  you  hit  <R>  and  you
+          can't remember the "secret" code to exit with no change.
+
+In order to verify what transpired, Type:L<R>  This will  list  the
+source code:
+
+1 *DEMO PROGRAM 1
+
+2       OBJ     $300
+
+3       ORG     $300
+
+4 BELL  EQU     $F8DD
+
+5 *
+
+6 *
+
+7       TYA
+
+8 START JSR     BELL    ;RING THE BELL
+
+9 END   RTS
+
+The three new lines (5, 6,  and  7)  have  been  Inserted  and  the
+subsequent original source lines have been renumbered.
+
+We are now going to Delete some of the source lines:
+
+Type:D5<R>   (If you are a masochist,  Delete5  or  Delete  5  work
+              equally well).  Note that nothing new (except the ":"
+              prompt ) appears on the screen.
+
+Type:L<R>   and list the source. Note that one of the asterisks  is
+              gone  and  the  following  lines  all  have  new line
+              numbers.
+
+Type:D5,6<R>   This is our friend the Delete operating on  a  range
+              of  lines.  List the source once more and notice that
+              we are back to the original source.
+
+The automatic  renumbering  feature  makes  it  CRUCIAL  that  when
+deleting  lines,  you  start with the highest line numbers and work
+backwards to the lowest. In addition, listing the  portions  to  be
+deleted  just  prior  to  issuing  the delete command can save much
+heartbreak.
+
+The Add,  Insert,  and  Edit  commands  have  several  sub-commands
+comprised of ^[CHAR]. To demonstrate, using our BELL routine:
+
+Type:E6<R> This will put you in the Edit mode for line 6 ONLY.
+
+6 END RTS will appear on the screen and the cursor is over the  "E"
+          in "END".
+
+TYPE:^D   The "E" disappears!  Type:^D^D and "END" is eaten up. The
+          cursor is positioned to the left of the opcode (RTS).
+
+Type:<R>  and you will exit the Edit mode.
+
+Type:L<R> Too list the source. In line 6 the RTS opcode is all that
+          remains.
+
+Type:E6<R> We are going to re-edit line 6.
+
+TYPE:^I   You are in the Character Insert Mode.  Do  not  move  the
+          cursor  with  the arrow keys or space bar unless you wish
+          to exit the insert mode.
+
+Type:END<R> This puts back the label and exits the Edit mode.
+
+Type:L<R> List the program once  more  and  note  that  line  6  is
+          restored (did you really think it wouldn't be?).
+
+
+
+In the examples we have shown so far, typing <R> causes us to  exit
+the Edit mode.
+
+Type:E3,6<R> (try it and ride along) the  cursor  will  be  on  the
+          space in column 1 and the line number will be "3".  Using
+          the arrow keys, step out to the right of the "$300" and
+
+Type<sp>;comment<R> You will see that you are  now  presented  with
+          line 4.
+
+Type:<R>  Now we are at line 5.
+
+Type:<R>  Guess what? Line 6. One more time
+
+Type:<R>  You are out of the Edit mode because  you  exhausted  the
+          "range" of lines specified on the "E" command.
+
+Type:L<R> Note that the source is the same except for that  comment
+          you added on line 3.
+
+
+4.2  Assembly
+
+The next step in using MERLIN is to assemble the source  code  into
+object code.
+
+Assuming you are in the EDITOR (":" prompt), Type:ASM<R>.
+
+On your screen you will see the following:
+
+
+UPDATE SOURCE (Y/N)?
+
+Type:N
+
+You will then see ...
+
+
+                        1       *DEMO PROGRAM  1
+                        2               OBJ     $300
+                        3               ORG     $300
+                        4       BELL    EQU     $FBDD
+0300:   20 DD FB        5       START   JSR     BELL    ;RING THE BELL
+0303:   60              6       END     RTS
+
+
+End assembly
+
+
+4 bytes
+
+
+Errors  0
+
+
+SYMBOL TABLE - ALPHABETICAL ORDER
+
+
+        BELL    =$F8DD          ?       END     =$0303
+
+
+?       START   =$0300
+
+
+SYMBOL TABLE - NUMERICAL ORDER
+
+
+?       START   =$0300          ?       END     =$0303
+
+
+        BELL    =$FBDD
+
+If instead of completing the above listing, the  system  plays  the
+"SDS Death Song" and displays an error message:
+
+  1.  Note the line number referenced in the message.
+
+  2.   Type:<R> until the "...BYTES' message appears.
+
+  3.   Refer back to  the  subsection  on  INPUT  and  compare  the
+      listing with ???.
+       Look especially for elements in incorrect fields.
+
+  4.   Assuming you found the error, you can fix it using the  EDIT
+      techniques  learned  earlier,  or  if the source is in such a
+      state you don't feel comfortable attempting that large a  job
+      right  now;  you  can type "NEW", which erases all input, and
+      start fresh.
+
+If (when) all went (goes) well, to  the  right  of  the  column  of
+numbers down the middle of the screen is the familiar, source code.
+
+To the left of the numbers, beginning on line 5,  is  a  series  of
+numeric  and  alphabetic  characters.  This is the object code; the
+opcodes  and  operands  assembled   to   their   machine   language
+hexadecimal equivalents.
+
+Left to right, the  first  group  of  characters  is  the  routines
+starting  address  in  memory (see the definition of OBJ and ORG in
+the section entitled " PSEUDO Opcodes -  Directives").   After  the
+colon is the number "20". This is the one byte hexadecimal code for
+the opcode JSR.
+
+Note that the label "START" is  not  assembled  into  object  code;
+neither  are the comments, or pseudo op's such as ORG and OBJ. Such
+elements are only for the convenience and utility of the programmer
+and  the  use  of  the assembler program. They are of no use to the
+computer and therefore,  are  not  translated  into  the  machine's
+language.
+
+The next two bytes (each pair of characters is one byte), on line 5
+bear  a curious resemblance to the last group of characters on line
+4; have a look.  In line 4 of the source code we told the assembler
+that  the  label "BELL" EQUated with address $FBDD. In line 5, when
+the assembler encountered "BELL" as the operand, it substituted the
+specified  address (number). The sequence of the high and low bytes
+was reversed, a 6502 convention.
+
+
+4.3  Saving and Running a Program
+
+The final step in using MERLIN is running the program. Before that,
+it would be a good idea to save the source code.  Keep in mind that
+the source code can be saved at any time. However,  the  saving  of
+object  code  can  take  place  ONLY  after  a successful assembly.
+Perform the following steps:
+
+  1.  Return  to  the  EDITOR  control  mode  (if  necessary)   and
+      Type:Q<R>.
+
+  2.  You will then Quit the EDITOR and  return  to  the  EXECUTIVE
+      (EXEC) mode. If the MERLIN system disc is still in the drive,
+      remove it and insert an initialized work disc.
+
+  3.  Type:S<R>    (This is the EXEC Save source command) EXEC will
+      ask  you  for  a file name. Type:DEMO1<R>    When the file is
+      saved, the "%" prompt will return.
+
+  4.  Type:C (Catalog) and look at the output. The source code  has
+      been  saved  as a binary file with the file name of "DEMO1.S"
+      The .S suffix is a  MERLIN  file  labeling  convention  which
+      indicates  the  file  is  a source code file.  This suffix is
+      automatically appended to the name by the "S" command.
+
+  5.  <R> to return to the EXEC mode.
+
+  6.  Type:O  (Object code save). The object code  is  saved  under
+      the  same  name  as  earlier  specified  for the source file.
+      However, there is no danger of overwriting  the  source  file
+      because  no  suffix is appended to the object code name. This
+      is an Apple convention and I don't want to  hear  that  whine
+      about "Why didn't you append a ".O" to the file name?"
+
+  7.  While writing either file to disk,MERLIN  also  displays  the
+      address  parameter,  and  calculates  and displays the length
+      parameter.  If you would like to have the address and  length
+      information visible for future reference, you can use the DOS
+      RENAME facility to do so.  Remember, the source MUST  end  in
+      ".S" if MERLIN is to read it in at some future time.
+
+  8.  Type:E    (this returns you to the editor mode.)
+
+  9.  Type:MON<R>   and the monitor prompt of "*" appears.
+
+ 10.  Type:300G<R>    a beep is heard! YOUR  demonstration  program
+      was  responsible  for it! It works! call up Steve W. at Apple
+      and apply for a job. You are a full fledged assembly language
+      programmer.
+
+ 11.  A final mundane job. Type:^Y<R> and you will return to  EXEC,
+      which is the subject of our next section.
+
+
+4.  Executive Mode
+
+The  EXECUTIVE  mode  is  the  program  level  provided  for   file
+maintenance operations such as loading or saving code or cataloging
+the disk.  The following sections summarize each command  available
+in  this  mode.  Note that each command consists of a single letter
+WITHOUT a RETURN <R> key operation. If the command requires further
+data, you will be prompted for same.
+
+
+4.1  C:Catalog
+
+After displaying the catalog, this command accepts any disk command
+you  may  wish to give, using standard DOS syntax. Unlike the LOAD,
+APPEND and SAVE, you must type the ".S" suffix when referring to  a
+source  file.  This  facility is provided primarily for locking and
+unlocking files. Do not use it to load or save files.   If  you  do
+not wish to give a disk command, just Type:<R>.  In order to cancel
+a partially typed command you can:
+
+  a.  Type:^X
+
+  b.  Assure that the  command  has  the  wrong  syntax  by  typing
+      multiple commas.
+
+  c.  Backspace to the beginning of the line, Type:^H  or  use  the
+      back arrow.
+
+If you Type:^C<R> after the "COMMAND:" prompt,you will be presented
+with  the  EXEC prompt of "%". You can then issue any EXEC command,
+such as "L" for LOAD. This permits you  to  give  an  EXEC  command
+while  the  catalog  is still on the screen. Typing of ^C<R> at the
+catalog pause point causes printing of the remainder of the catalog
+to be aborted.
+
+
+4.2  L:LOAD
+
+Load is used to load a source file from disk. You will be asked for
+the  name  of  the file. You must not append ".S" since Merlin does
+this automatically.  From the foregoing you will  notice  that  ALL
+source  files must end in ".S" or Merlin will not load them. If you
+have such a file, refer to the Merlin Catalog command and  use  the
+DOS RENAME facility to remedy the situation.
+
+If you Type:L by mistake, just Type:<R><R> and the command will  be
+cancelled without affecting any file that may be in memory.
+
+After a Load or Append command, you are automatically placed in  th
+EDITOR  mode,  just  as if you had typed "E".  Subsequent Load/Save
+commands will  display  the  last  used  filename,  followed  by  a
+flashing  "?". If you Type:Y, the current filename will be used for
+the command. If you type any other character (e.g. <R>), the cursor
+will  be  placed on the first character of the remembered filename,
+and you may type in the desired name. Of course, tracing  over  the
+remembered  filename with the arrow keys (<- and ->) will cause the
+characters traced over  to  be  entered  as  all  or  part  of  the
+command's  filename.   This  is  a  useful feature when you wish to
+read/save a modified file with the same  name  except  a  different
+suffix.  All you do in this case is Type:L<R>(trace with arrow keys
+to  desired  point)"type  remainder"<R>  and  the  file   will   be
+read/saved  under the new name. Practice with "uncritical" files if
+you feel unsure about this feature.
+
+If you type <R> instead of entering a filename, the command will be
+cancelled.
+
+
+4.3  S:Save
+
+Use this command to save a source file to disk. As  with  the  Load
+command,  you  must NOT specify the ".S" suffix, Merlin will supply
+it.  If you do Type:filename.S, it will be saved as "filename.S.S".
+On  subsequent  Load/Save/Append  commands,  you  would  Type:L/S/A
+"filename.S".  Merlin would the  append  from  "filename.S.S".   As
+with Load, you can type the appropriate number of <R> to cancel the
+command PRIOR to any other keyboard input.
+
+Note that the address and length of the file are shown on the  menu
+and are for informational purposes only and should (cannot) be used
+for Saving the file.
+
+If the file in memory was entered totally  from  the  keyboard  and
+this  is  the  first time it is to be saved, there is no remembered
+filename (obvious, don't you think?).  However,  if  the  file  was
+read  using  the  Load  command or it has been saved before in this
+session, there will be a remembered filename (equally obvious  from
+the  previous  comment).  The same procedures with regards to using
+the arrow keys or not, apply here.
+
+
+4.4  A:APPEND
+
+This reads in the specified file and Appends (concatenates)  it  to
+the end of the file already in memory.  The Append command does not
+affect the remembered (default) file in any way. In fact, if Append
+is  used  when there is NO file in memory it will load the file and
+still will not change  the  remembered  filename  (NULL);  that  is
+dedication to design!
+
+
+4.5  D:Drive
+
+Typing the command "D" causes the default drive to toggle between 1
+and  2.   The  currently selected drive is shown on the menu.  When
+Merlin is first BRUN, the selected drive will be the  one  selected
+by  the  BRUN.  Of course, booting Merlin with PR#6, open apple,...
+causes the default drive to be 1.  There is no command  to  specify
+the  slot  number.  However, this can be accomplished by typing "C"
+for CATALOG which will display the current disk's directory. At the
+end  Type:CATALOG,Sn,Dm",  where  n is the new slot number and m is
+the drive in that slot.
+
+The above will Catalog the selected  drive  and  more  importantly,
+change the slot number Merlin uses for it's disk commands.
+
+
+4.6  E:EDITOR
+
+This command places you in the EDITOR/ASSEMBLER mode.
+
+NOTE:  The defaults for a number of EDITOR commands  are  set  when
+moving  from  the  EXEC  to the EDITOR mode.  If you change some of
+these defaults while in  the  EDITOR,  then  "Q"uit  to  the  EXEC,
+followed  by  "E"  to go back to the EDITOR; These defaults will be
+changed back to their default value. Those commands that experience
+this  phenomenon, are commented as such in the EDITOR section. Stay
+alert!
+
+
+4.7  O:Object Code Save
+
+You are permitted to use  this  command  ONLY  after  a  successful
+assembly  (ASM)  of  a  source  file. In this case you will see the
+address and length of the object code on  the  menu.  As  with  the
+source address, it is given for information only.
+
+The object address shown is that of the program's ORG (or $8000  if
+an  ORG  is  not  supplied)  and  not  the  actual  location of the
+assembled code (which is $8000 or whatever OBJ you have used).  No,
+the  previous  sentence  did not take leave of it's mind.  You have
+got to  get  it  straight  that  when  we  say  "object",  we  mean
+ "object", not "object".
+
+Enough of this mirth. The object address shown  on  the  EXEC  menu
+refers  to  the  address that the object program will be loaded too
+when it is BRUN/BLOADed.   Unfortunately,  there  is  an  assembler
+pseudo-op  called "OBJ" that is used to specify where the object is
+to be stored during the assembly process.  With this in  mind,  the
+first sentence is saying, "If OBJ is not specified, the object code
+is stored at $8000 during assembly (almost always exactly what  you
+want).   Furthermore,  If  an  ORG  statement  is not provided, the
+program will be defaulted to run at location $8000." Now,  back  to
+the big "O" command.
+
+When using this command you are asked for the name  of  the  object
+file  (the  source  filename  without the ".S" is the default). The
+object will be saved under whatever  name  you  chose  WITHOUT  any
+suffix being supplied by Merlin.
+
+
+4.8  Q:Quit
+
+Q exits to BASIC. Later, you may  re-enter  Merlin  by  typing  the
+"ASSEM" command.  The re-entry will be a warm start, which means it
+will not destroy the source file currently in memory.  While Merlin
+will not destroy the source in this case, what did you do while you
+were out there where we couldn't watch you? Did  you  do  something
+that did destroy Merlin's memory?
+
+The moral of this is: Why take chances? store your source prior  to
+exiting Merlin and then reload it when you return. If the source is
+small and can be checked and/or retyped in a short time, go ahead.
+The idea behind "ASSEM" is to allow  you  to  exit  and  type  disk
+commands  if it is more convenient than the method provided via the
+"C" command.
+
+
+4.9  R:Read
+
+This command reads text files into Merlin. They are always appended
+to  the  present  contents  of  the buffer.  If this is not what is
+desired:
+
+  1.  Enter the EDITOR and Type:NEW<R>
+      This will cause the buffer to become empty.
+
+  2.  Exit back to the EXEC mode. Type:Q<R>
+
+  3.  Now perform the "R"ead command and the file will be  appended
+      to NULL.
+
+Note that the "R"command always causes the default filename  to  be
+the last file read in this fashion.
+
+When the read is complete, you are placed in  the  EDITOR.  If  the
+file  contains  lines  greater  than  255  characters, they will be
+divided into two or more lines by the Read routine.
+
+The file will be read only until it reaches HIMEM, that will  cause
+a  memory  error if it attempts to go beyond and only the data read
+to that point will remain  (we  had  hoped  to  preserve  the  data
+not read to that point. However, you know how it goes on government
+jobs).
+
+The Read and Write commands will prefix  a  "T."  to  the  filename
+unless you precede the filename with a space or any other character
+in the ASCII range of $20  through  $40.  Since  the  character  is
+simply  a  flag  to Merlin to tell it to not prefix the "T." to the
+filename, you are showing off if you use anything except  a  space.
+I  repeat,  the "no T." character will not be given to DOS and will
+not become part of the actual filename.
+
+
+4.10  W:Write
+
+This writes a Merlin file into a disk text file instead of a binary
+file.   See  the previous Read command for a discussion of the "T."
+prefix.
+
+The speed of the read (poet) and Write  routines  is  approximately
+that of a BLOAD or BSAVE.  However, the Write routine does a VERIFY
+after the Write. This will  convince  you  (rightly  so)  that  the
+process is taking much longer than a "normal" "S"ave.
+
+
+
+
+5.  The EDITOR
+
+The EDITOR has  a  primary  mode  called  the  COMMAND  mode.   All
+commands in the EDITOR start from this mode.  In fact, one can view
+it as the only mode, with  the  ADD/INSERT,  EDIT,  and  ASM  modes
+simply  being  commands with sub-options.  However, rather than fly
+in the face of popular convention, we will refer to these  commands
+as  "modes."  The important thing to remember is, where and what we
+are doing at a particular instant  in  time,  not  what  some  nit-
+picking purist calls our position in space and time.
+
+
+5.1  Command Mode
+
+For many of the commands in this section, only the first letter  of
+the  command  is  required,  the  rest being optional. The required
+command characters are shown in upper case and the optional ones in
+lower case.
+
+In some commands you must specify either a line number, a range  of
+line numbers, or a range list. A line number is just that; a number
+that exists as a line number for the data  set  (source  file).   a
+range  is  a pair of numbers separated by a comma (14,20).  A range
+list   is   a   series   of    ranges    separated    by    slashes
+(14,20/26,32/88,99).
+
+Several commands allow the specification of a  string.  The  string
+must  be  delimited (set off) by a non-numeric character other than
+the slash.  Such a delimited string  is  called  a  "d-string"  The
+usual delimiter is either a single or double quote mark (' or ").
+
+For those commands involving a d-string, the character "^"  (carot)
+acts  as  a wild card. Therefore, "Jon^s" will match both Jones and
+Jonas.
+
+Line numbers in the editor are provided  automatically.  You  NEVER
+type them when entering text; only when giving commands.  If a line
+number in a range exceeds the  number  of  the  last  line,  it  is
+automatically  adjusted  to  the  last line number.  This is a very
+helpful attribute for those cases where you wish to modify a  range
+from  some point to the end of the data set and you do not know (or
+care to know) the last  line  number.  Assuming  the  data  set  is
+approximately  200 lines long and you wish to change some string of
+text from the 42nd line to the end of the  data  set;  specify  the
+range as "42,999."
+
+A final point. The EDITOR automatically replaces spaces in comments
+and  ASCII  strings  with inverse spaces. When listing, it converts
+them back, so you never see them as  inverse  on  the  screen.  Its
+purpose  is  to  avoid  inappropriate tabbing of comments and ASCII
+strings when they are listed.  (Arn't you glad we  told  you  about
+something  you  have  no  control over and didn't worry about until
+this comment? It's nice to spread a little doubt and  gloom  around
+to the troops.)
+
+In the case of ASCII strings added to the source via "ASC" commands
+(see  the Assembler), the inverse space conversion takes place only
+if the delimiter is either the single or double quote (' or "). For
+those  cases  where  the  delimiter  can  be neither, the following
+procedure may be followed.
+
+Edit the line and replace the first delimiter with a  single  quote
+and  Type:<R>.   Re-edit  the line and change the delimiter back to
+the desired one.
+
+May we now present the commands? (did I hear modes?)
+
+
+5.1.1  HImem
+
+HI expression
+Where expression is a decimal or qualified ($)  hexidecimal  number
+that  specifies the end address +1 of the source, and the beginning
+of the object (OBJ).  It must fall in the range of 2305 ($901)  and
+38995  ($9853).   See  the  memory  map  that applies to your Apple
+system in the Technical notes  section  of  this  manual.   HI(mem)
+defaults  to  $8000  and does not need to be set unless you need to
+adjust for large source that generates small OBJ.  All in  all,  it
+should seldom (never?) need setting.
+
+
+5.1.2  NEW
+
+Deletes  the  present  source  file,  resets  HIMEM  (MERLIN's  not
+Apple's) to $8000 and starts fresh.
+
+
+5.1.3  PR#(0-7)
+
+Same function as in BASIC. Mainly used for  sending  an  editor  or
+assembly  listing listing to a printer.  Do NOT use this command to
+select an 80 column card. See the VIDeo command for that function.
+
+
+5.1.4  USER
+
+USER does a JSR to $3F5 (this is  the  Applesoft  ampersand  vector
+location,  which  normally points to an RTS).  The designed purpose
+of this command is for the connection of  user  defined  (supplied)
+printer  drivers.  This  printer  driver  must  not  use  zero page
+addresses except for the I/O pointers  and  locations  $60  through
+$6F. Ignoring this rule can (will) cause Merlin grevious trouble as
+it is a heavy user of zero page locations.
+
+This Editor command should not be confused with the Assembler "USR"
+command which is used for different purposes.
+
+
+5.1.5  TABS
+
+Allows setting the number of successive  columns  for  tabbing  and
+optionally, a tab character. These tabs are for the EDITOR and have
+no effect on the assembler listing.  Up to nine tabs are  possible.
+An example of the command is:
+
+        TABS 5,10,15,20,25,30,35,40,45,<:>
+
+
+The above will cause tab stops to be set for columns 5, 10,...   In
+addition,  the tab character is set to be the colon (:). This means
+that whenever a colon is typed and the cursor is less  than  column
+45;  it  will  be  tabbed  to the next greatest tab stop. After the
+cursor reaches column 45, a colon will not cause a tab to occur.
+
+Entry of "TABS<R>" will cause all tabs to be set to zero.
+
+If you do not specify a  tab  character,  the  the  last  one  used
+remains in effect.
+
+It must be kept in mind that the assembler regards the space as the
+only  acceptable  (tab)  character  for  the  separation of labels,
+opcodes, and operands. Use of some other character will  cause  the
+SDS death song to play when you attempt an assembly.
+
+
+5.1.6  LENgth
+
+This gives the decimal length (in bytes) of the  source  file,  and
+the  number  of  decimal  bytes  remaining  before  MERLIN's  HIMEM
+(usually $8000).
+
+The EXEC menu gives the hexadecimal start  address  and  length  of
+source.  See the "Where" command for more in this thrilling story.
+
+
+5.1.7  Where, WO, and O Commands
+
+Where line nimber
+prints in hexadecimal, the location in memory of the start  of  the
+specified source line.
+
+"WO and O" are the same command. They (it?) print  the  hexadecimal
+address of the end of source.
+
+These three (two?) commands, the LENgth command and the  EXEC  menu
+(where  the  start  address  for  the  source  and  its  length are
+displayed) are interrelated.
+
+
+5.1.8  MONitor
+
+MON exits to the monitor. You must re-enter by either  ^C,  ^B,  or
+^Y. These re-establish the important zero page pointers from a save
+area inside MERLIN` itself. Thus, ^Y will give a correct entry even
+if you have messed up the zero page pointers while in the monitor.
+
+DOS is not connected when using MON.
+
+MON is provided for  experienced  Apple  programmers,  and  is  not
+recommended to beginners.
+
+Also, you may re-enter the EDITOR directly with an "0G" This entry,
+unlike  the  others, will use the zero page pointers at $0A through
+$0F instead of the copies saved upon exit.  Therefore, you must  be
+sure that they have not been altered.
+
+Since the ^Y, etc. method is always available, I'm not  quite  sure
+why  I  told you about this 0G nonsense; you are just going to hurt
+yourself and then come crying to me.
+
+
+5.1.9  TRuncON
+
+TRuncON is an immediate command that sets a flag for the  List  and
+Print commands. This flag, when set, will terminate printing of all
+lines with a space followed by a semicolon.  This  is  intended  to
+make  it  easier  to  read  source  listings  on an Apple 40 column
+screen.
+
+TRuncON should not be confused with the TR command. The TR  command
+goes in the source listing and is a command for the assembler.  See
+the Assembler section for TR command usage.
+
+
+5.1.10  TRuncOFF
+
+TRuncOFF resets the truncation flag such that List and  Print  will
+print  the  entire  line. TRuncOFF is the default condition for the
+flag and it is reset on entry to the EDITOR mode  from  either  the
+EXEC or Assembler modes.
+
+Keep in mind that the what the preceding said;  "if  you  exit  the
+EDITOR and then re-enter, TRuncOFF will be the default condition.
+
+As with TRuncON, do not confuse this command with the Assembler  TR
+command.
+
+
+5.1.11  Quit
+
+Exits to the EXEC mode.
+
+
+5.1.12  ASM
+
+This passes control; to the Assembler, which attempts  to  assemble
+the source file. First you are presented with an "update the source
+(Y/N)?" message.  If you answer "N" the assembly will proceed.
+
+However, if you answer "Y", you will be placed in the EDIT mode  in
+the  first  line in the source that contains a "/". When you finish
+editing this line and hit return, assembly will begin.  If there is
+no  line  with  a  "/"  or  while in the EDIT mode you Type:^C, the
+assembly will be aborted and you will return to the EDITOR with all
+I/O hooks established by "PR#n, etc. disconnected.
+
+The idea behind the "/" convention, is to allow you to  keep  track
+of  multiple  versions  of  a  program.  There  is no way (darn) to
+permanently disable this annoying message  with  the  configuration
+program.
+
+
+5.1.13  Control-D (^D)
+
+During the second pass of the assembly (the second pass is when the
+listing  is being sent to the screen), if you Type:^D, the printing
+of the listing is toggled such that it will either stop or  resume.
+Since  this  command  toggles  the flag controlled by the Assembler
+pseudo-op "LST", there exists an interaction such that the  listing
+can start or stop subsequent to your issuing a keyboard ^D. Another
+^D on your part will re-establish the wanted state.
+
+
+5.1.14  Delete
+
+This command deletes the specified line(s).  If LNn =  line  number
+n, then Delete has the following forms:
+
+D LNn                   Delete the line number.
+
+D LNn,LNm               Delete line number n through m.
+
+D LNn,LNm/LNo,LNp,...   Delete  line  number  n  through  m  and  o
+                        through p,...
+
+When N lines are removed, all subsequent lines move "up"  N  lines.
+This  means  they  change!  Therefore, in the case of a range list,
+you must specify the higher numbered range first (or have a strange
+brain that likes computing the changed line numbers).
+
+
+5.1.15  Replace
+
+Replace has two forms:
+
+  1.  R line number
+
+  2.  R line number N through M
+
+This command deletes the line number or range, then places  you  in
+the Insert mode at that location.
+
+
+5.1.16  List
+
+If LN = line number then List has four forms:
+
+L                  No parameters, list the entire source file.
+
+L LN               List the single line number.
+
+L LNn,LNm          List line number N through M.
+
+L LNn,LNm,LNo,LNp  List line number N through M then O  through  P.
+                   Note:  there  is  no requirement as to higher or
+                   lower line numbers as is the case with Delete.
+
+This command lists the specified portion(s) of the source file with
+line  numbers  shown  on  the left. Control characters are shown in
+inverse unless the listing is being  sent  to  a  printer  or  some
+nonstandard output.
+
+The listing can be aborted by a ^C or the slash (/) key.
+
+The listing can be temporally stopped by hitting the space bar;  it
+can  then  be advanced a line at a time by subsequent operations of
+the space bar.  After being stopped by the space  bar,  it  can  be
+restarted  by the operation of any other key.  This space bar pause
+also works during the assembly and during the  symbol  table  print
+out.
+
+
+5.1.17  . (period)
+
+Lists the source starting at the beginning of  the  last  specified
+range. For example, If you type "L10,100" then lines 10 through 100
+will be listed.  If you then type ".", the listing will start again
+at line 10 and will continue until stopped or the end of the source
+is encountered ( the end of a range is not remembered).
+
+
+5.1.18  /[line number]
+
+The slash continues listing from the last line  number  listed,  or
+when  a  line  number  is  specified,  from that line.  The listing
+continues to the end  of  the  source  file  or  until  stopped  as
+explained under the List command.
+
+
+5.1.19  Print
+
+This command has the same format as List:
+
+P          Print the entire source.
+
+P LNn      Print line number N.
+
+P LNn,LNm  Print line number N through M.
+
+P LNn,LNm/LNo,LNp Print line number N through M, O through P.
+
+Print is identical to List except line numbers are not  printed  as
+the leftmost column.
+
+
+5.1.20  PRinTeR [command]
+
+The PRTR command is for sending a listing to a  printer  with  page
+headers and provisions for page boundary skips.  Default parameters
+may be set up using the configuration program  (see  the  Technical
+section, "Configure ASM Program").  The syntax of PRTR is:
+
+        PRTR slot# "[string]"[page header"]
+
+If the slot number is greater  than  7,  a  "JSR  $#F5"  (ampersand
+vector) is performed and it is expected that the routine there will
+connect a printer driver by putting the address of same in  address
+$36, $37 (high low format).
+
+Note that the page header is optional and if  omitted,  the  header
+will  consist of page numbers only.  However, the initialization is
+not optional and  must  be  specified.  If  no  special  string  is
+required  by  the  printer,  use  either  an unrecognizable control
+character (unrecognizable by the printer) or the  NULL   string  (a
+fancy  way  of  saying two double quotes with nothing between). If
+NULL is specified, a carriage return will be used. Examples  of
+initialization  strings  are "^Q" (CTRL-Q) for IDS printers, or
+"^I80N" for most Apple cards.
+
+PRTR 0 (no setup string required/allowed)  will allow you to see
+where page breaks occur in the assembly. If you are using an 80
+column card, use PRTR 3 for this function.
+
+No output is sent to the  printer  until  a  List,  Print,  or  ASM
+command  is  issued.  (Not  true,  the  printer is tickled with the
+initialization string.  In any case, why would  you  issue  a  PRTR
+command  if  you wern't going to issue a subsequent List, Print,...
+command? Strange statement.)
+
+
+5.1.21  Find
+
+See the introduction to this  section  for  the  definition  of  d-
+string, range, range list.
+
+Find has the following formats:
+
+F                        Lists all occurrences of string.
+
+F(range)"d-string"       Lists  all  occurrences  of  d-string   in
+                         range.
+
+F(range list)"d-dstring" Lists all occurrences of string  in  range
+                         list.
+
+Find may be aborted  by typing either a  ^C  or  /.   The  ^L  will
+toggle  the  case  so you can find strings with lower case strings.
+In the case of Apple  //e,  you  can  use  either  the  lower  case
+keyboard or the ^L method.
+
+
+5.1.22  Change
+
+Change has the following formats:
+
+C"d-string1"d-string2"[line/range/range list]
+
+this command changes occurrences  of  the  first  d-string  to  the
+second. If none of the optional line formats is specified, then the
+entire file is the default range.
+
+Before the change operation begins, you are asked if  you  wish  to
+change  "all  or  some." If you select some, by typing the "S" key,
+the editor stops whenever the first string is  found  and  displays
+the  line  as it would appear with the change. If you hit "ESC" the
+change will not be made in that case.  Hitting the space  bar  will
+accept  the  change  as shown.  It should be noted that if the same
+string appears N times in the same line, you  will  be  prompted  N
+times for approval/disapproval.
+
+Typing ^C or / at any time will abort the change process.
+
+
+5.1.23  COPY
+
+COPY line number/range TO line number
+
+This command copies the line/range to just above the specified line
+number.  It does not delete anything (that is why it is called COPY
+not MOVE) Also, note that "TO"  is  part  of  the  command  and  is
+required.
+
+
+5.1.24  MOVE
+
+MOVE line number/range TO line number.
+
+This command copies the line/range to just above the specified line
+number.   It  then  deletes  the original lines.  You always end up
+with the same number of lines except they are in a different order.
+Also, note that "TO" is part of the command and is required.
+
+
+5.1.25  Edit
+
+E [line number,range,range list],[d-string]
+
+Edit presents the line, range, or range list, line by  line  to  be
+edited.  If a d-string is appended, only those lines containing the
+string are presented.  Some examples are:
+
+  1.  E 14 causes line 14 to be presented for editing. When <R>  is
+      typed, you exit the edit mode.
+
+  2.  E 14,20 causes lines  14  through  20  to  be  presented  for
+      editing.   When  <R>  is  typed,  you  advance  to  the  next
+      sequential line until line 20 has been edited. At that point,
+      you will exit the edit mode.
+
+  3.  E 14,20/2,14  same  sequence  as  above  except  line  2   is
+      presented  after  line  20. Notice that line 14 appears twice
+      with no harm.
+
+  4.  E "sought text" causes  every  line  in  the  data  set  that
+      contains the string "sought text" to be presented in turn for
+      editing.
+
+  5.  E 14,20,"sought text" causes every line from  14  through  20
+      that  contains  the  string  "sought text" to be presented in
+      turn for editing.
+
+
+5.1.25.1  Edit Commands
+
+Once in the edit  mode  the  first  line  of  the  range  you  have
+specified  is  displayed on the screen with the cursor on the first
+character. The line is tabbed as it is when listed  with  the  List
+command. The cursor will jump from character to character and field
+to field under control of the two horizontal arrow keys.  When  you
+are through editing (using the commands to be discussed below or by
+completely retyping over the old text) Type:<R> and  you  the  line
+will  be  accepted  as  typed. In addition, you will go to the next
+line in the range or you will exit the Edit mode if  this  was  the
+only/last  line  to  be  edited  in the range. Please note that the
+cursor does not have to be at any particular point on the line when
+<R> is typed for the entire line to be accepted.
+
+The Edit commands and functions are very similar, but not identical
+to  those  in  Neil Konzen's "Program Line Editor" and Southwestern
+Data System's "A.C.E."
+
+All the commands, except ^R are available in the Add/Insert modes.
+
+   ^I   Insert command.  ^I  begins  the  insertion  of  characters
+        before  the  cursor.  This  command  is  terminated  by any
+        control character except ^L which is the  upper/lower  case
+        toggle.  Normal usage is to move to the insertion point and
+        Type:^I text, followed by either of  the  horizontal  arrow
+        keys  (which  are  ^H  and ^U i.e. control keys) to move to
+        some other point on the line for further editing or <R>  to
+        accept the line as it stands and move on to the next.
+
+   ^D   Delete command. ^D deletes  the  character  underneath  the
+        cursor.
+
+   ^F   Find  command.   ^F  finds  the  next  occurrence  of   the
+        character  typed  after  the ^F (on the line being edited).
+        After the character is found, another ^F character sequence
+        may be typed in. The arrow keys are much faster.
+
+   ^O   Insert Special command.  ^O functions as described  for  ^I
+        and  in addition allows the insertion of control characters
+        and the typing of characters not  found  on  the  Apple  ][
+        keyboard.   For  normal and control characters, simply type
+        them after typing ^O.  For the unavailable  characters  see
+        the following chart:
+
+               <    gives   Control _
+
+               >      "     Control backslash
+
+               K      "     [
+
+               L      "     backslash
+
+               M      "     ]
+
+               N      "     ^
+
+               O      "     _
+
+               k      "     {
+
+               l      "     |
+
+               m      "     }
+
+               n      "     tilde
+
+               o      "     Whatever $FF gives on your machine
+
+
+        Note: If you are using a shift key modification,  depending
+        on  which  one you have, shift-M may give upper case ^M and
+        you will have to use ^O^O to get the right bracket.
+
+   ^P   Do **** command.  If entered as the first  character  of  a
+        line it gives 32 *'s.
+
+   ^@   Do boarder command.  If entered as the first character of a
+        line it gives 30 spaces boardered by *'s.
+
+   ^C or ^X Cancel command.  Aborts the Edit mode  and  returns  to
+        the  EDITOR.  The current line being edited will retain its
+        original form.
+
+   ^B   Go to line beginning command.  Places  the  cursor  at  the
+        beginning of the line.
+
+   ^N   Go to line end command.  places the cursor to the right  of
+        the last character on the line.
+
+   ^R   Restore line command.  Returns the  line  to  its  original
+        form. This command is not available in the Add/Insert mode.
+
+   ^Q   Delete line right command.  Deletes the part  of  the  line
+        following the cursor.
+
+   <R>  Return key.  The Return key accepts the line as it  appears
+        on  the  screen  and fetches the next line to be edited, or
+        returns to the EDITOR mode if the specified range has  been
+        completed.
+
+
+5.1.26  Hex Dec Conversion
+
+If, in the command mode, you type a  decimal  number  (positive  or
+negative) the hexadecimal equivalent is returned.
+
+If you type an hex number (number is prefixed by a "$") the decimal
+equivalent is returned.
+
+All MERLIN commands accept hex numbers, which are mainly convenient
+for  HIMEM and SYM commands.  However, if you wish to show off, the
+Edit command will also accept hex numbers.
+
+
+5.1.27  TEXT
+
+This converts all spaces in a source file to  inverse  spaces.  The
+purpose  of  this  is  for  use  on  "text" files so that it is not
+necessary to zero  the  tabs  before  printing  such  a  file.  The
+conversion has no effect on anything except the editors tabulation.
+
+
+5.1.28  FIX
+
+This undoes the effect of the command TEXT. It also does  a  number
+of  technical  housekeeping  chores.  It is recommended that FIX be
+used on all files from  external  sources,  after  which  the  file
+should be saved.
+
+Both TEXT and FIX are written in sweet 16  code  and  are  somewhat
+slow.  Several minutes may be needed to process large files. FIX or
+an Edit command will truncate any lines longer than 255 characters.
+
+
+5.1.29  SYM
+
+MERLIN places the symbol table on the language card (in bank  1  of
+$D000  through  $DFFF).  This  space  is quite adequate for all but
+gigantic programs.  In case this space is used up, the SYM  command
+gives  you  a  means to direct the assembler to continue the symbol
+table in another area. For example, if you type  "SYM  $9000",  and
+assemble  the  program,  when  and  if the symbol table uses up its
+normal space, it will be continued at $9000 until it reaches  BASIC
+HIMEM.
+
+It should be noted that the SYM command  will  be  cancelled  by  a
+HIMEM  command  or  by  an exit to the EXEC mode, followed by a re-
+entry to the EDITOR.  The above should make it quite clear that  if
+your  are  going to use both HIMEM and SYM, then you must set HIMEM
+prior to SYM.
+
+The SYM address must be above MERLIN HIMEM and below  BASIC  HIMEM.
+If  the symbol table grows beyond its alloted space, you will get a
+memory error during the first pass of the assembly.
+
+The interactions between SYM, MERLIN HIMEM, BASIC  HIMEM,  and  OBJ
+(see  assembler)  are difficult to describe in a succinct manner to
+an inexperienced programmer. By the time you are capable of writing
+programs  that  require manipulation of these commands, you will be
+an experienced programmer and the documentation provided  (here and
+in the suggested reading guide) will be more than sufficient.
+
+Using SOURCEROR on large ($3500 bytes) programs will cause  you  to
+run  into these situations much earlier. Keep in mind that you must
+have enough memory for the symbol table and the source. The  object
+can be saved using the DSK which frees $8000 to BASIC HIMEM for the
+symbol table. Using the PUT pseudo op as described will handle  the
+very large source situation.
+
+Also, remember that there are interactions between the above  named
+commands/pseudo  op's.  Understanding will come only after repeated
+reading/study/bloody experiences of/with same.
+
+
+5.1.30  Video
+
+The command will select or deselect an 80 column board. The default
+condition can be selected using the configuration program.
+
+VIDeo is similar to the use of PR# in BASIC.  However, Do  Not  Use
+PR#  to  select  an 80 column board while in MERLIN.  PRQ# is to be
+used to select a printer ONLY.
+
+If your 80 column board is in  slot  3,  for  example,  it  can  be
+selected by typing "VID 3", while in the EDITOR.
+
+It is deselected by VID 0 or VID $10 possibly  followed  by  RESET.
+The  latter  two  forms  both  select  the  standard  Apple screen.
+However, VID 0 will cause all lower case output to the screen to be
+converted  to  upper case.  Note that lower case in the source file
+will be converted to flashing upper case (output to the printer  is
+never converted).
+
+If you have a lower case adapter, you will want to use VID $10  (or
+VId  16 if you are a decimal freak) instead of VID 0 when selecting
+the 40 column mode.
+
+If your 80 column  card  has  aa  software  switch  via  an  escape
+sequence,  this  may be used to return to 40 column mode. This will
+be equivalent to VID $10 and would have to be followed by a  VID  0
+if you don't have a lower case adapter.
+
+For example, use:
+
+   W ESC ^Q<R> on the Smarterm.
+
+   W ESC Q ^X on the Sup"R" term.
+
+
+5.1.31  FW
+
+This is an alternative to  the  find  command.  It  will  find  the
+specified  word  only  if  it  is  surrounded,  in  source, by non-
+alphanumeric characters.  Therefore, FW"CAT" will find:
+
+   W CAT
+
+   W CAT-1
+
+   W (CAT,X)
+
+It will not find CATALOG or SCAT.
+
+
+5.1.32  CW
+
+Where FW  was  an  alternative  to  the  Find  command,  CW  is  an
+alternative to the Change command.  It too will find and change the
+specified string, only if  it  is  surrounded  by  non-alphanumeric
+characters. See FW for examples.
+
+
+5.1.33  EW
+
+Edit Word is to Edit as FW is to Find. See FW for examples.
+
+
+5.1.34  VAL
+
+VAL :expression" returns the value of "expression" as the assembler
+would compute it.  Examples:
+
+VAL "LABEL"    Gives the address (or value) of LABEL for  the  last
+               assembly  done  or  "unknown label" if the label was
+               not part of the previous assembly.
+
+VAL "$1000/2"  Returns $0800
+
+VAL "%1000"    Returns $0008
+
+VAL !"A"       Returns $0011
+
+
+5.1.35  Add/Insert Mode
+
+If not already done, it will prove very helpful to read  and  under
+stand the Edit command prior to attempting these two commands.
+
+The Add/Insert mode acts as if you are in  the  Edit  mode,  except
+that  ^R will do nothing (this is reasonable since the there really
+is no "original" state for the line).  In addition, exit  from  the
+Add/Insert  commands can only occur if a null line is input (a line
+with no text and <R> is typed).
+
+
+5.1.35.1  Add
+
+Add can only add lines behind the last line in the source.  If  you
+wish  to add lines to any other point, see the Insert command which
+follows.
+
+If you Type:Add you will be placed in the Add mode.  It  acts  much
+like  entering  BASIC  lines with auto line numbering. However, you
+may enter lower case text (useful for comments) by typing ^L or  if
+you  have  a shift lock key, you can release it.  ^L acts as a case
+toggle; typing another ^L will return you to the upper case.
+
+In any case, text is entered as [LABEL] OP [OPERAND] [;COMMENTS] or
+*COMMENT or ;COMMENT by itself.  When you type the space after each
+of the fields, you will be tabbed to the first column of  the  next
+field.  This continues until you exit by typing a null line (<R> by
+itself) or by either ^X or ^C. The control characters will exit and
+also cancel the current line (if typed after a <R> which accepted a
+previous line, the effect is the same as typing <R>).
+
+The Add command is also useful for determining the last line number
+in  the  source.  Simply  type  A<R> and subtract one from the line
+number just to the left of the cursor.
+
+
+5.1.36  Insert
+
+Insert is identical to Add except it adds text above the  specified
+line.
+
+
+5.1.37  ^L
+
+Control-L toggles the current case. If you are in  upper  case,  ^L
+will  place  you  in lower, and vice versa. Upper case is defaulted
+when entering each new line.
+
+To change the case of a word already in the source,  Type:^L,  then
+copy over the word using the right arrow key.
+
+
+
+
+6.  The Assembler
+
+This section will not  attempt  to  teach  you  assembly  language.
+Rather,  it will explain the syntax you are expected to use in your
+source files, and document the features that are available  to  you
+in the assembler.
+
+
+6.1  Number Format
+
+The assembler accepts decimal, hexadecimal;  and  binary  numerical
+data. Hex numbers must be preceded by a "$" and binary numbers by a
+"%", thus the following four instructions are all equivalent:
+
+  1.  LDA #100
+
+  2.  LDA #$64
+
+  3.  LDA #%1100100
+
+  4.  LDA #%01100100
+
+As implied, leading zeros are ignored. The "#" stands  for  "number
+or  "data",  and the effect of all four instructions is to load the
+accumulator with the decimal number 100.
+
+A number not preceded by a "#" is interpreted as an address:
+
+ LDA 1000   LDA $3E8   LDA %111101000  are all  ways  to  load  the
+accumulator with the byte that resides in memory location $3E8.
+
+Use the number format that is appropriate for clarity. For example,
+the data table:
+
+  DA   $1
+
+  DA   $A
+
+  DA   $64
+
+  DA  #3E8
+
+  DA   $2710
+
+The above is much more mysterious than its decimal equivalent:
+
+  DA 1
+
+  DA 10
+
+  DA 100
+
+  DA 1000
+
+  DA 10000
+
+
+
+6.2  Source Code Format
+
+A line of source code typically looks like:
+
+
+     LABEL OPCODE OPERAND ;COMMENT
+
+A line containing only a comment must begin with either  a  "*"  or
+";".   Comments  starting  with a ";" will be tabbed to the comment
+field, while comment lines beginning  with  a  "*"  will  begin  in
+column 1.
+
+The assembler will accept an empty line the source and  will  treat
+it as a SKP 1 instruction, except the line number will be printed.
+
+The number of spaces separating the fields is not important, except
+for  the EDITOR which expects a single space. The gist of the above
+is; it won't harm the assembly.  However,  the  listing  will  look
+strange if there is more than one space separating the fields.
+
+The maximum allowable LABEL length is 13 characters, but more  than
+8  will  produce messy assembly listings. A LABEL must begin with a
+character at least as large, in ASCII value, as the colon, and  may
+not  contain  any  character  less, in ASCII value, than the number
+zero.
+
+The assembler examines only  the  first  three  characters  of  the
+OPCODE  (with certain exceptions such as the SWEET 16 opcode POPD).
+For example, you can use  PAGE  instead  of  PAG  (because  of  the
+exception,  the  fourth  letter  must  not  be  a  D, however). The
+assembler listing will truncate the opcode to  seven  letters.   In
+addition, the listing will not look well with an opcode longer than
+four characters unless there is no operand.
+
+The  maximum  allowable  combined  OPERAND+COMMENT  length  is   64
+characters.  You  will  get  an  error  message  if  this  limit is
+exceeded.  Also,  a  comment  line  by  itself  is  limited  to  64
+characters. Same error message applies.
+
+
+6.3  Expressions
+
+To make clear the syntax accepted and/or required by the assembler,
+we  must  define  what is meant by an "expression". Expressions are
+built up from "primitive expressions"  by  use  of  arithmetic  and
+logical operations. The primitive expressions are:
+
+  1.  A label
+
+  2.  A decimal number
+
+  3.  A hexadecimal number (preceded by a "$").
+
+  4.  A binary number (preceded by "%").
+
+  5.  Any ASCII character either, preceded or enclosed by double or
+      single quotes.
+
+  6.  The character "*" which stands for the present address.
+
+All number formats accept 16-bit data and leading zeros  are  never
+required.
+
+In case 5,, the value of the primitive expression is the  value  of
+the  ASCII  character.  The high bit will be on if the double quote
+(") is used, and off if the single quote (') is used.
+
+The assembler supports the four arithmetic operations: +, -, /, and
+*.   It  also  supports the three logical operations: ! = Exclusive
+OR, . (period) = OR, and & = AND.
+
+Some examples of legal operations are:
+
+   LABEL1-LABEL2
+
+   2*LABEL+$231
+
+   1234+%10111
+
+   K
+
+   0
+
+   LABEL&$7F
+
+   *-2
+
+   LABEL.%10000000
+
+Parentheses  have  another  meaning  and   are   not   allowed   in
+expressions.   All  arithmetic and logical operations are done from
+left to right (2+3*5 would assemble as 25 and not 17).  Parentheses
+are  normally  used  to  change  the  order  of  evaluation  in  an
+expression.  If the need  arises  to  perform  such  an  operation,
+partial  "sums"  can  be  collected  in  dummy  labels  and finally
+combined to obtain the desired effect.   Using  the  above  example
+where the answer was 25, and assuming the desired answer was 17:
+
+     LABEL1  EQU     3*5
+     LABEL2  EQU     2+LABEL1
+
+
+6.4  Immediate Data
+
+For  those opcodes such as LDA, CMP, etc., which  accept  immediate
+data  (numbers  as  opposed  to  the  contents  of  addresses)  the
+immediate mode is signaled by preceding the expression with a  "#".
+An example is LDX #3 which would load the X register with the value
+3 rather than the contents of address 3.  In addition:
+
+     #<expression   Produces the low byte of the expression.
+
+     #>expression   Produces the high byte of the expression.
+
+     #expression    Also produces the low byte  of  the  expression
+                    (the 6502 does not accept 2-byte data).
+
+     #/expression   Produces the high byte of the expression and is
+                    an optional syntax.
+
+The recommended syntax is  "<"  and  ">"  for  low  and  high  byte
+respectively.   Whatever  syntax  you use, be consistent, use it in
+every case so your reader won't think there  is  something  special
+about the "one case" where you specify "<" for low byte.
+
+The ability of the assembler to evaluate expressions such as
+LAB1-LAB2-1 is very useful for the following type of code:
+
+          COMPARE LDX     #FOUND-DATA-1
+          LOOP    CMP     DATA,X
+                  BEQ     FOUND
+                  DEX
+                  BPL     LOOP
+                  JMP     REJECT  ;not found
+          DATA    HEX     E3BC3498
+          FOUND   RTS
+
+With this type of code, if you add or delete some  of  the  "Data",
+then the X-index for the comparing loop is automatically adjusted.
+
+
+6.5  Addressing Modes (6502 opcodes)
+
+The assembler accepts all of the 6502  opcodes  with  the  standard
+mnemonics. It accepts BLT (Branch if Less Than) as an equivalent to
+BCC, and BGE (Branch if Greater than or Equal) as an equivalent  to
+BCS.
+
+There are 12  addressing modes on the 6502. The appropriate  MERLIN
+syntax for these are:
+
+  1.  Implied                 OPCODE          CLC
+
+  2.  Accumulator             OPCODE          ROR
+
+  3.  Immediate data          OPCODE  #expr   ADC     #$F8
+                                              CMP     #'M'
+                                              LDX     #>L1-L2-1
+
+  4.  Zero Page Address       OPCODE  exp     ROL     6
+
+  5.  Zero Page Indexed X     OPCODE  exp,X   LDA     $E0,X
+
+  6.  Zero Page Indexed Y     OPCODE  exp,Y   STX     LAB,Y
+
+  7.  Absolute Address        OPCODE  exp     BIT     $300
+
+  8.  Absolute Indexed X      OPCODE  exp,X   STA     $4000,X
+
+  9.  Absolute Indexed Y      OPCODE  exp,Y   SBC     LABL-1,Y
+
+ 10.  Indirect                 JMP       (expr)    JMP       ($3F2)
+      Indirect Preindexed X   OPCODE  (exp,X) LDA     (6,X)
+
+ 11.  Indirect Postindexed Y  OPCODE  (exp),Y STA     ($FE),Y
+
+There is no difference in syntax for zero page and absolute  modes.
+The  assembler  automatically uses zero page mode when appropriate.
+In the indexed, indirect modes, only  a  zero  page  expression  is
+allowed,  and  the  assembler  will  give  an  error message if the
+"expression" does not evaluate to a zero page address.
+
+When an instruction uses the "accumulator  mode"  MERLIN  does  not
+require  (or accept) an operand. Some assemblers perversely require
+you to put an "A" in the operand for this mode.
+
+The assembler will decide the legality of the addressing  mode  for
+any given opcode.
+
+MERLIN provides the ability to force non-zero page  addressing.  In
+order to do this you add "anything" to the end of the opcode except
+"D". As an example:
+
+        LDA     $10     ;assembles as zero page (2 bytes)
+        LDA:    $10     ;assembles as non-zero page (3 bytes)
+
+
+The use of a character that "prints" is  encouraged.  In  addition,
+the  use of the same character throughout will aid your readers. An
+appropriate comment is always in order.
+
+
+6.6  Sweet 16 Opcodes
+
+The assembler accepts  all  Sweet  16  opcodes  with  the  standard
+mnemonics. The usual Sweet 16 registers do not have to be "equated"
+and the "R" is optional.  TED II+ users will be glad to  know  that
+the  SET opcode works as it should, with numbers or labels. For the
+SET opcode, either a  space  or  comma  may  be  used  between  the
+register  and  the data part of the operands; that is, SET R3,LABEL
+is the equivalent to SET R3 LABEL (the second is not as elegant  as
+the  first,  however).  It  should  be noted that the NUL opcode is
+assembled as a 1 byte opcode (the same as hex 0D)  and  not  a  two
+byte  skip  as  this  would be interpreted by ROM Sweet 16. This is
+intentional and is done for internal reasons.
+
+
+6.7  Pseudo Opcodes - Directives
+
+
+6.7.1  EQU (=)
+
+The EQUals pseudo op has an optional syntax:
+
+LABEL   EQU     expression      ;comment
+LABEL   =       expression      ;comment
+
+The above two examples,  assuming  expression  is  the  same,  will
+generate  the same value for LABEL. Either syntax is used to define
+the value of a LABEL, usually an exterior address or a constant for
+which  a  meaningful  name  is  desired (good programming practices
+dictate that all constants be given a meaningful name and  comment.
+The  meaning  of  "magic"  numbers  tends  to fade when the program
+source is read at a later time).  In any case,  it  is  recommended
+that the EQU"s all be located at the beginning of the program.
+
+The assembler will not permit an EQU to a zero  page  number  after
+the  label  equated has been used, since bad code could result from
+such a situation.
+
+Also, see the pseudo op VAR.
+
+
+6.7.2  ORG
+
+Establishes the address at which the program is designs to run.  It
+defaults  to  the present value of Merlin HIMEM ($8000 by default).
+Usually, there will be one ORG and it will be at the start  of  the
+program.
+
+If more than one ORG is  used,  the  first  establishes  the  BLOAD
+address.  This can be used to create an object file that would load
+at one address even though it might be designed to run at another.
+
+You cannot specify "ORG *-1", etc. to back up the  object  pointers
+as is possible with some assemblers. For this, you must use "DS-1".
+
+
+6.7.3  OBJ
+
+OBJ expression
+
+OBJect establishes the address at which the  object  code  will  be
+placed  during  assembly.  it  defaults  to  MERLIN HIMEM. There is
+rarely any need to use this pseudo-op and programmers are urged  to
+not use it.
+
+If OBJ is specified at some address above BASIC  HIMEM  or  SYM  it
+will  defeat  generation  of  object  code.  This  may be used when
+sending a long listing to a  printer  or  when  using  the  "direct
+assembly to disk" (DSK) opcode.
+
+
+6.7.4  PUT
+
+PUT filename
+
+PUT filename[,Sx,Dy], where Sx and Dy are Slot and Slot  parameters
+in  standard  DOS  syntax,  will  read  the named file, with a "T."
+prefixed unless the filename begins  with  a  character  less  than
+ASCII  "@"  ("space" is ideal), and "inserts" it at the location of
+the PUT opcode.
+
+  A.  The "insert" referred to above is misleading.  Actually,  the
+      code   is  placed  (generated)  just  behind  the  previously
+      assembled "Main" source.  When the  PUT  file  is  exhausted,
+      Main will continue.
+
+  B.  Text files are required by this facility in order  to  assure
+      memory protection.
+
+  C.  A memory error will occur if the PUT file causes the assembly
+      to go beyond HIMEM.
+
+  D.  PUT files are in memory one  at  a  time,  so  a  very  large
+      program can be assembled using this facility.
+
+There are two restrictions on a PUT file:
+
+  1.  There cannot be macro definitions within  a  PUT  file.  They
+      must be within the main source.
+
+  2.  A PUT file may NOT call  another  file  with  a  PUT  opcode.
+      However,  it  is permitted to have the "main program" contain
+      nothing but macro definitions and PUT opcodes.
+
+Any variable (e.g. ]LABEL) may be used as  "local"  variables.  The
+usual  local variables ]1 through ]8 may be set up for this purpose
+using the "VAR" opcode.
+
+PUT provides a simple and straight forward way to incorporate often
+used  subroutines,  such as MSGOUT and/or PRDEC, in a program.  One
+simply has a collection  of  proven  useful  subroutines  that  are
+called  in, as needed, by PUT.  Since PUT accepts Slot and/or Drive
+parameters, these subroutines do not need to be on the same disk as
+the source for "main".
+
+
+6.7.5  VAR
+
+VAR     expr1,expr2,expr3,...,expr8
+
+VAR is a convenient way to equate all or some of the  variables  ]1
+through ]8 at the same time.
+
+VAR     3;$42;LABEL     will set ]1 = 3, ]2 = $42, and ]3 =  LABEL.
+VAR  is  designed  to  be  used  just before a PUT in order to pass
+parameters for use during the assembly. In fact, if a PUT uses  any
+of  the  variables  ]1  through  ]8 except in >>> lines for calling
+macros, they must be declared prior to the PUT.
+
+
+6.7.6  SAV
+
+SAV  filename[Sx,Dy]  where  Sx  and/or  Dy  are  Slot  and   Drive
+parameters in standard DOS format.
+
+SAV will save the current object code  under  the  specified  name.
+This  acts  exactly  as  does  the  MERLIN  EXEC mode object saving
+command, except it can  be  done  several  times  during  assembly.
+After  a  save,  the  MERLIN  object area is "empty" and the object
+address is set to the last specification of OBJ, or if  it  is  not
+present, MERLIN HIMEM by default.
+
+The SAV command sets the address of the saved file to the "correct"
+value.   For  example,  the  first  file will have an origin of the
+initial ORG command, the second will have the last address  of  the
+first+1,  and  the  third will have the address of the second+1,...
+When BLOADed later, they will go to the correct location(s).
+
+Together the PUT and SAV  opcodes  make  it  possible  to  assemble
+extremely large files.
+
+
+6.7.7  DSK
+
+DSK     filename
+
+DSK instructs the assembler to assemble the following code directly
+to  disk.  IF DSK is already in effect, the old file will be closed
+and a new one begun.
+
+DSK is used primarily for extremely  large  files.  For  moderately
+sized  programs,  SAV  is  preferred  since  it  is  30% faster and
+theoretically more reliable.
+
+If the CHK opcode is specified, it will be disabled when DSK is  in
+effect.
+
+
+6.7.8  END
+
+This opcode is not needed by MERLIN. It is provided so  MERLIN  can
+assemble  source  code  originally  written  for assemblers that do
+require an END statement.  In any event, good programming  dictates
+that  it  should  be  specified (Don't you feel better when you see
+both the ORG and END opcodes surrounding your precious source?).
+
+
+6.8  Formatting
+
+6.8.1  LST ON/OFF
+
+LST ON  or LST OFF
+
+LST controls whether the assembly listing is  to  be  sent  to  the
+Apple  screen and/or other output device. You may, for example, use
+LST to send only a portion of the  assembly  listing  sent  to  the
+printer.  Any  number  of LST instructions may be in the source. If
+the LST condition is off at the  end  of  the  assembly,  then  the
+symbol table will not be printed.
+
+Please note that a CNTRL D (^D) toggles the  LST  flag  during  the
+second (printing) pass of the assembly.
+
+
+6.8.2  EXP
+
+EXP ON or EXP OFF (EXPand macro assembly)
+
+EXP ON will cause both the macro call and the generated code to  be
+printed during the second pass of the assembly.
+
+EXP OFF will print only the PMC pseudo ops.
+
+In either case, there is no effect on the generated code.
+
+
+6.8.3  PAU
+
+PAU (PAUse)
+
+PAU causes the second pass of the assembly to pause until  any  key
+is hit.
+
+
+6.8.4  PAG
+
+PAG (PAGe)
+
+This sends a form feed ($8C) to the printer. It has  no  effect  at
+any time on the screen.
+
+
+6.8.5  AST
+
+AST "expression"
+
+AST sends "expression" number of asterisks to the listing.
+
+
+6.8.6  SKP
+
+SKP "expression"
+
+SKP sends  "expression"  carriage  returns  (spaces/skips)  to  the
+listing.
+
+
+6.8.7  TR
+
+TR ON or TR OFF
+TR ON limits object code printout to three  bytes  per  line.  This
+means  that  long  HEX  statements  will print only the first three
+bytes (all bytes are present, just not printed).
+
+TR OFF causes all object bytes to be printed.
+
+The assembler TR command is NOT the same as the EDITOR TR command.
+
+
+6.9  STRINGS
+
+
+6.9.1  ASC
+
+ASC puts a delimited ASCII string into the object  code.  The  only
+restriction on the delimiter is that it cannot appear in the string
+itself.
+
+Different delimiters have different  effects.  Any  delimiter  less
+than  (in  ASCII  code)  the single quote (') will produce a string
+with the high bit on (set).  Otherwise, the high bit will  be  off.
+For  example,  the  delimiters  !"#$%&  will  produce  a  string in
+"negative ASCII" (high bit  on),  and  the  delimiters  '()+?  will
+produce a string in "positive ASCII" (high bit off).
+
+Usually, the double quote (") and the  single  quote  (')  are  the
+delimiters  of  choice,  but,  other  delimiters provide a means of
+inserting a string containing either of the quotation symbols.
+
+
+6.9.2  DCI
+
+DCI "d-string" (Dextral Character Inverted)
+
+DCI has all the rules as the ASC pseudo op. The only difference  is
+that the last character is generated with an opposite high bit from
+the others.  This is used by string manipulation routines  to  tell
+the end of a string.
+
+
+6.9.3  INV
+
+INV d-string
+
+INV generates a string in inverse format. All delimiters  have  the
+same effect.
+
+
+6.9.4  FLS
+
+FLS d-string
+
+FLS generates a string in flashing format. all delimiters have  the
+same effect.
+
+
+6.9.5  REV
+
+REV d-string (REVerse)
+
+Generates a string in reverse. For example:
+
+        REV "DISK VOLUME"       gives;
+             EMULOV KSID
+
+The delimiter rules are the same as for ASC pseudo op.
+
+
+6.10  Data and Allocation
+
+
+6.10.1  DA
+
+DA "expression" (Define Address)
+
+This stores the two byte value of the operand, usually  an  address
+in the object code, low byte first.
+
+        DA $FDF0 will generate F0 FD.
+
+DA also accepts multiple data (e.g. DA 1,10,100).
+
+
+6.10.2  DDB
+
+DDB expression (Define Double Byte)
+
+DDB stores a two byte operand with the high byte first. This is the
+compliment instruction to DA.  DDB accept multiple data on the same
+opcode. See DA example.
+
+
+6.10.3  DFB
+
+DFB expression (DeFine Byte)
+
+DFB generates the bytes specified by expression. It accepts several
+bytes  of  data, separated by commas. The standard number format is
+used and arithmetic is done as usual. The symbols "<" and  ">"  are
+used to specify the low and high bytes of a label.
+
+If the "<" or ">" symbols are omitted, the low byte is assumed  and
+taken.   Either  of the two should appear as the first character of
+an expression or immediately following a "#."
+The instruction:
+
+  DFB >LAB1-LAB2 will produce  the  high  byte  of  the  expression
+LAB1-LAB2
+
+The expression DFB $34,100,LAB1-LAB2,%1011,>LAB1-LAB2
+
+is a properly formatted DFB statement which will generate  the  hex
+object  code  34  64 DE 0B09, assuming that LAB1 = $81A2 and LAB2 =
+$77C4.
+
+
+6.10.4  HEX
+
+HEX operand(s)
+
+HEX allows direct insertion of  hexidecimal  data  (no  expressions
+and/or  labels allowed).  Unlike all other cases, the "$" qualifier
+is not required or accepted with this  command.  The  operand  must
+consist  of  one or more pairs of numbers which may be separated by
+commas or adjacent.
+
+An error message will be generated if the operand contains  an  odd
+number  of  digits or ends in a comma, or as in all cases, contains
+more than 64 characters.
+
+
+6.10.5  DS
+
+DS expression (Define Storage)
+
+DS reserves space for string storage data.  It  does  not  generate
+code.  For  example,  DS  10  will  set  aside 10 decimal bytes for
+storage. Because DS adjusts the object code  pointer,  instructions
+"DS  -1" can be used to back up the object and address pointers one
+byte.
+
+
+6.10.6  KBD
+
+KBD (KeyBoarD)
+
+KBD allows a label to be equated from the keyboard during assembly.
+Its syntax is: LABEL KBD.
+
+
+6.10.7  LUP
+
+LUP expression (Loop)
+--^ (end of loop)
+
+An example of the syntax is:
+        LUP 4
+        ASL
+        --^
+
+This will assemble as:
+
+        ASL
+        ASL
+        ASL
+        ASL
+
+and will show that way in the assembly listing, with repeated  line
+numbers.
+
+Perhaps the major use of LUP is for table building. As an example:
+
+        ]A   =   0
+             LUP $FF ;build 255 word table
+        ]A   =   ]A+1
+             DFB ]A
+             --^     ;end of LUP
+
+The above will build a 255 word table that contains 1, 2,  3,  ...,
+$FF.   The  maximum  LUP  value  is  %8000.  The LUP opcode will be
+ignored if you try to use more than this.
+
+
+6.10.8  CHK
+
+CHK expression (CHecKsum)
+
+CHK places a checksum byte into the object code at the location  of
+the  CHK  opcode  (usually at the end of the program). It cannot be
+used when DSK is in effect.
+
+
+6.10.9  ERR
+
+ERR expression (ERRor)
+
+ERR will cause a forced error if the  expression  has  a  non  zero
+value.   The  error will consist of the message "Break in line ???"
+to be printed.
+
+For example, ERR may be used to insure that your program  does  not
+exceed address $95FF by adding the final line:  ERR *-1/$9600.
+
+Another available syntax is:  ERR ($300)-4C. This will  produce  an
+error  on  the first pass, and abort the assembly, if location $300
+does not contain the value $4C.
+
+
+6.10.10  USR
+
+USR opcode
+
+This is a user definable pseudo opcode. It does a JSR  $B6DA.  This
+location  will  contain  a RTS after a boot, a BRUN MERLIN, or BRUN
+BOOT ASM. To set up your routine you should BRUN it from  the  EXEC
+command  after  CATALOG.  This should just set up a JMP at $B6DA to
+your main routine then RTS. The following flags  and  entry  points
+may be used by your routine.
+
+     USRADS   = $B6DA ;must have a JMP to your routine
+     PUTBYTE  = $E5F6 ;see below
+     EVAL     = $E5F9 ;see below
+     PASSNUM  = $2    ;contains assembly pass number
+     ERRCNT   = $1D   ;error count
+     VALUE    = $55   ;value returned by EVAL
+     OPNDLEN  = $BB   ;contains the combined length of
+                      ;the operand and comment
+     NOTFOUN  = $FD   ;see discussion of EVAL
+     WORKSP   = $280  ;contains the operand and
+                      ;comment in positive ASCII
+
+     Your routine will be called by the USR opcode  with  A=0,  Y=0
+     and  carry  set.  To direct the assembler to put a byte in the
+     object code, you perform a JSR PUTBYTE with the byte in A.
+
+     PUTBYTE will preserve Y but will scramble A and X. It  returns
+     with  the  zero flag clear (so that a BNE always branches). On
+     the  first  pass,  PUTBYTE  adjusts  the  object  and  address
+     pointers,  so  that  the  contents  of  the  registers  is not
+     important. You MUST call PUTBYTE the same number of  times  on
+     each  pass  or the pointers will not be kept correctly and the
+     assembly and other parts of the program will be incorrect.
+
+     If your program needs to evaluate the operand, or part of  it,
+     you  can  do  this by a JSR EVAL. The X register must point to
+     the first character of the portion of the operand you wish  to
+     evaluate  (set  X=0 to evaluate the expression at the start of
+     the operand). On  return  from  EVAL,  X  will  point  to  the
+     character  following the evaluated expression.  The Y register
+     will contain a 0, 1, or 2 accordingly as this character  is  a
+     right parenthesis, space, or comma.
+
+     Any character not allowed in  an  expression  will  cause  the
+     assembly  to  abort  with  the  message "BAD OPERAND." If some
+     label in the  expression  is  not  recognized,  then  location
+     NOTFOUN  will  be non zero. On the second pass you will get an
+     "UNKNOWN LABEL" message and the rest of your routine  will  be
+     ignored.   On  return  from  EVAL,  the  computed value of the
+     expression will be in location VALUE  and  VALUE+1,  low  byte
+     first.  On  the  first  pass,  this value will be incorrect if
+     NOTFOUN is non zero.
+
+     Appropriate locations  for  your  routine  are  $300-$3CF  and
+     $8A0-$8FF.  You  must  not  write outside these ranges!  For a
+     longer routine, you may use high memory, just below $9853.  If
+     you are sure that the label table will not exceed $1000 bytes,
+     you could use the EDITOR command "SYM" to protect your routine
+     from  being over written by the object code. SYM would have to
+     be set at least one byte below your code.  You  can  use  zero
+     page  locations  $60-$6F,  but  should  not  alter  any  other
+     locations.  Also, you must not change anything  from  $226  to
+     $27F,  or  anything  from  $2C4 to $2FF. Upon return from your
+     routine (RTS), the USR line will be  printed  (on  the  second
+     pass).
+
+     To gain further understanding of the  use  of  USR,  read  the
+     source  file  SCRAMBLE.S or, for a more sophisticated example,
+     the file FLOAT.S. SCRAMBLE.S uses the USR  opcode  to  put  an
+     ASCII  string  into  the  object  code  in a scrambled format.
+     FLOAT.S is a somewhat complicated routine that uses  Applesoft
+     to compute the packed (five byte) form of a specified floating
+     point number, and put it in the object code.  FLOAT.S  can  be
+     used only on an Apple ][+ or //e.
+
+     When you use the USR opcode in a source file, it  is  wise  to
+     include  some  sort  of  check  (in  source) that the required
+     routine (yours) is in memory. If, for  example,  your  routine
+     contains  the  byte  $31 at location $310 then:  ERR (310)-$31
+     will test that byte and abort assembly if  it  is  not  there.
+     Similarly,  if  you  know  that  the  required  routine should
+     assemble exactly two bytes of data, then you can check for  it
+     by the following code:
+
+             LABEL  USR OPERAND
+                    ERR *-LABEL-2
+
+     This will force an error on the second pass if  USR  does  not
+     produce exactly two object bytes.
+
+     It is possible to use USR for several  different  routines  in
+     the  same  source.   For example, your routine could check the
+     first operand expression for an index to the  desired  routine
+     and act accordingly. Thus,"USR 1,whatever" would branch to the
+     first routine, "USR 2,stuff" to the second, etc.
+
+
+6.11  Conditionals
+
+DO (DO if true)
+
+DO
+
+This together with ELSE and FIN are the conditional
+assembly PSEUDO-OPS. If the operand evaluates to ZERO,
+then the assembler will stop generating object code
+(until it sees another conditional). Except for macro
+names, it will not recognize any labels in such an area
+of code. If the operand evaluates to a non-zero number,
+then assembly will proceed as usual. This is very
+useful for MACROS.
+
+It is also useful for sources designed to generate
+slightly different code for different situations. For
+example, if you are designing a program to go on a ROM
+chip, you would want one version for the ROM and another
+with small differences as a RAM version for debugging
+purposes. Conditionals can be used to create these
+different object codes without requiring two sources.
+Similarly, in a program with text, you may wish to have
+one version for Apples with lower case adapters and one
+for those without. By using conditional assembly,
+modification of such programs becomes much simpler,
+since you do not have to make the modification in two
+separate versions of the source code.
+
+Every DO should be terminated somewhere later bya FIN
+and each FIN should be preceded by a DO. An ELSE should
+occur only inside such a DO/FIN structure. DO/FIN
+structures may be nested up to eight deep (possibly with
+some ELSE's between). If the DO condition is off (value
+0), then assembly will not resume until its corres-
+ponding FIN is encountered, or an ELSE at this level
+occurs. Nested DO/FIN structures are valuable for
+putting conditionals in MACROS.
+
+
+ELSE (ELSE do this)
+
+ELSE
+
+This inverts the assembly condition (ON becomes OFF and
+OFF becomes ON) for the last DO.
+
+
+IF (IF so then do)
+
+IF char,]var (IF char is the first character of ]var)
+
+This checks to see if char is the leading character of
+the replacement string for ]var. Position is important:
+the assembler checks the first and third characters of
+the operand for a match. If a match is found then the
+following code will be assembled. As with DO. this must
+be terminated with a FIN. with optional ELSEs between.
+The comma is not examined. so any character may be used
+there. For example:
+
+IF "=]l
+
+could be used to test if the first character of the
+variable ]1 is a double quote (") or not, perhaps needed
+in a macro which could be given either an ASCII or a hex
+parameter.
+
+
+FIN (FINish conditional)
+
+FIN
+
+This cancels the last DO or IF and continues assembly
+with the next highest level of conditional assembly, or
+ON if the FIN concluded the last (outer) DO or IF.
+
+
+6.2  Macros
+
+MAC (begin MACro definition)
+
+Label MAC
+
+This signals the start of a MACRO definition. It must
+be labeled with the macro name. The name you use is
+then reserved and cannot be referenced by things other
+than the PMC pseudo-op (things like DA NAME will not be
+accepted if NAME is the label on MAC). However, the
+same thing can be simulated by preceding the MACRO with
+LABEL EQU *, or LABEL DS 0, &c. See the section on
+MACROS for details of the usage of macros.
+
+
+EOM (<<<)
+
+EOM
+<<< (alternate syntax)
+
+This signals the end of the definition of a MACRO. It
+may be labeled and used for branches to the end of a
+macro, or one of its copies.
+
+
+PMC (>>>)
+
+PMC macro-name
+>>> macro-name (alternate syntax)
+
+This instructs the assembler to assemble a copy of
+the named macro at the present location. See the
+section on MACROS. It may be labeled.
+
+
+6.3  Variables
+
+Labels beginning with "]" are regarded as VARIABLES.
+They can be redefined as often as you wish. The de-
+signed purpose of variables is for use in MACROS, but
+they are not confined to that use.
+
+Forward reference to a variable is impossible (with
+correct results) but the assembler will assign some
+value to it. That is, a variable should be defined
+before it is used.
+
+It is possible to use variables for backwards branching,
+using the same label at numerous places in the source.
+This simplifies label naming for large programs and uses
+much less space than the equivalent once-used labels.
+For example:
+
+1              LDY #0
+2  ]JLOOP      LDA TABLE,Y
+3              BEQ NOGOOD
+4              JSR DOlt
+5              lNY
+6              BNE ]JLOOP     ;BRANCH TO LINE 2
+7  NOGOOD      LDX #-l
+8  ]JLOOP      lNX
+9              STA DATA,X
+10             LDA TBL2,X
+11             BNE ]JLOOP     ;BRANCH TO LINE 8
+
+
+6.x  Local Variables (ref. Merlin 8 and later versions)
+
+A local label is any label beginning with a colon (:). A local
+label is attached to the last global label and can be referred
+to by any line from that global label to the next global label.
+You can then use the same local label in other segments governed
+by other global labels. You can choose to use a meaningless type
+of local label such as: 1, :2, etc., or you can use meaningful
+names such as :LOOP, :EXIT, and so on.
+
+Some restrictions on use of local labels are ...
+
+1) Local labels cannot be used inside macros.
+2) You cannot label a MAC, ENT or EXT with a local label and
+   you cannot EQUate a local label.
+3) The first label in a program cannot be a local label.
+
+
+6.x2  Local Labels, Global Labels and Variables (ref. Merlin 8 ...)
+
+There are three distinct types of labels used by the assembler.
+Each of these are identified and treated differently by Merlin:
+
+Global Labels  -labels not starting with "]" or ":"
+Local labels   -labels beginning with ":"
+Variables      -labels beginning with "]"
+
+Note that local labels do not save space in the symbol table,
+while variables do. Local labels can be used for forward and
+backward branching, while variables cannot. Good programming
+practice dictates the use of local labels as branch points,
+variables for passing data, etc..
+
+
+
+
+7.  Macros
+
+7.1  Defining a Macro
+
+A macro definition begins with:
+
+     NAME MAC (no operand)
+
+NAME is in the label field. The macro's definition is terminated by
+the  pseudo  op  EOM or <<<. The label NAME cannot be referenced by
+anything other than PMC NAME or >>> NAME.
+
+You can define a macro the first  time  you  wish  to  use  it  the
+program.  However, it is preferable (and required if the macro uses
+variables) to define all macros at the  beginning  of  the  program
+with the assembly condition;n OFF.  The macro(s) then can be called
+where needed.
+
+Forward referencing to a macro definition is not possible and  will
+result in a "NOT MACRO" message. That is, the macro must be defined
+prior to the first call via PMC.
+
+The conditionals DO, ELSE and  FIN  may  be  used  inside  a  macro
+definition.
+
+Labels inside macros, such as  LOOP  and  OUT  in  the  example  in
+section 7.4, are updated each time PMC is encountered.
+
+Error  messages  generated  by  errors  in  macros  usually   abort
+assembly,  because  of possible harmful effects. Such messages will
+generally indicate the line number of a PMC rather the line  inside
+the macro where the error occurs.
+
+7.2  Nested Macros
+
+Macros may be nested to a depth of 15. For nesting, macros must  be
+defined with the DO condition OFF.
+
+Here is example of a nested macro in which the definition itself is
+nested.   (This  can  only be done when both definitions end at the
+same place.)
+
+     TRDB    MAC
+             >>> TR.]1+1;]2+1
+     TR      MAC
+             LDA ]1
+             STA ]2
+             <<<
+
+In this example >>> TR.LOC,DEST will assemble as:
+
+             LDA LOC
+             STA DEST
+
+PMC TRDB.LOC;DEST will assemble as:
+
+             LDA LOC+1
+             STA DEST+1
+             LDA LOC
+             STA DEST
+
+A more common form of nesting is illustrated by these two macro
+definitions (where CH = $24):
+
+     POKE    MAC
+             LDA #]2
+             STA ]1
+             <<<
+
+     HTAB    MAC
+             >>> POKE.CH;]1
+             <<<
+
+
+7.3  Special Variables
+
+Eight variables, named  ]1  through  ]8  are  pre-defined  and  are
+designed  for  use  in  macros.  They receive there values from the
+variables supplied on the actual call of the macro. For example:
+
+             >>> NAME.expr1;expr2;expr3;...
+
+will assign the value expr1 to the variable ]1, expr2 to ]2, and so
+on.  An example of this concept is:
+
+     TEMP    EQU $10
+             DO  0
+     SWAP    MAC
+             LDA ]1
+             STA ]3
+             LDA ]2
+             STA ]1
+             LDA ]3
+             STA ]2
+             <<<
+             FIN
+
+The call of >>> SWAP $6;$7;TEMP   will result in the following code
+being generated.
+
+             LDA ]1  becomes   LDA $6
+             STA ]3            STA TEMP
+             LDA ]2            LDA $7
+             STA ]1            STA $6
+             LDA ]3            LDA TEMP
+             STA ]2            STA $7
+
+If, as above, some of the special variables are used in  the  macro
+definition,  then  values  for them must be provided in the PMC (or
+>>>) statement. In the assembly listing the special variables  will
+not  be  printed.  Rather,  they  will be replaced by the variables
+and/or constants from the macro call.
+
+On the macro call itself, the number of parameters input must match
+the  number  of  variables  in  the macro definition. A BAD OPERAND
+error will be generated if the number of parameters  is  less  than
+the number of variables.  However, no error message will be printed
+if there are more parameters than variables.
+
+The assembler will accept some other characters  on  place  of  the
+space  between  the  macro  name  and  the  expression  in  the PMC
+statement. For example, you may use any of these characters:
+
+      . / , - (
+
+ The semicolons between parameters are required and no extra spaces
+are allowed.
+
+Macros will accept literal data. Thus the assembler will accept the
+following type of macro call:
+
+             DO  0
+     MUV     MAC
+             LDA ]1
+             STA ]2
+             <<<
+             FIN
+
+             PMC MUV (PNTR),Y;DEST
+             >>> MUV.#3;FLAG,X
+
+     It will also accept:
+
+     DO 0
+     PRINT   MAC
+             JSR SENDMSG
+             ASC ]1
+             BRK
+             <<<
+             FIN
+
+             PMC PRINT.!"quote"!
+             PMC PRINT.'This is an example'
+             >>> PRINT."So's this, understand?"
+
+LIMITATION: If such strings contain spaces or semicolons, they must
+be  delimited  by  quotes (single or double. See ASC for single and
+double quote rules.). Also, literals must have the final delimiter.
+(This  is  only  true  in  macro calls or VAR statements, but it is
+goods practice in all cases.)
+
+A previous version  of  this  assembler,  that  did  not  have  the
+capabilities  just described, used commas rather than semicolons in
+>>> statements. For people that have source files  that  used  that
+version,  a  program called CONVERT has been provided which changes
+those commas to semicolons in a second or two.
+
+In order to use CONVERT follow the following procedure:
+
+  1.  Boot the MERLIN disk.
+
+  2.  Load the source file that has the offending commas.
+
+  3.  Type C(catalog) at the EXEC mode's menu.
+
+  4.  When the  catalog  has  completed  and  the  word  "Command?"
+      appears, type BRUN CONVERT.
+
+  5.  Save your source file when CONVERT has completed  and  return
+      is made to the EXEC menu.
+
+
+7.4  Sample Program
+
+Here is a sample program intended to illustrate the usage of macros
+with  non standard variables. It would be simpler and more pleasing
+if it used ]1 instead of ]MSG since the variable equates  would  be
+eliminated and the values for ]1 provided in the >>> lines.
+
+     HOME    EQU     $FC58
+     COUT    EQU     $FDFD
+     KEY     EQU     $C000
+     STROBE  EQU     $CO10
+     DOS     EQU     $3D3
+
+             DO      0       ;ASSEMBLY OFF
+     SENDMSG MAC             ;START DEFINITION OF THE
+                             ;MACRO SENDMSG
+             LDY     #0
+     LOOP    LDA     ]MSG,Y  ;GET A CHARACTER
+             BEQ     OUT     ;END OF MESSAGE
+             JSR     COUT    ;SEND IT
+             INY
+             BNE     LOOP    ;BACK FOR MORE
+     OUT     <<<             ;END OF MACRO DEFINITION AND
+                             ;EXIT FROM ROUTINE
+             FIN
+
+             JSR     HOME    ;CLEAR SCREN
+     ]MSG    EQU     HITMSG
+             >>>     SENDMSG
+     INVRS   CMP     #"I"
+             BNE     NORM
+     ]MSG    EQU     IMSG
+             >>>     SENDMSG
+     NORM    CMP     #"N"
+             BNE     STP     ;SEE IF HE WANTS TO STOP
+     ]MSG    EQU     NMSG
+             PMC     SENDMSG ;>>> AND PMC ARE EQUIVALENT
+     STP     CMP     #"S"
+             BNE     GETKEY  ;NO, GET NEXT KEY INPUT
+             JMP     DOS     ;ALL DONE. EXIT GRACEFULLY
+
+     HITMSG  ASC     !HIT       ;A KEY "F","I","N", OR "S"!
+             HEX     8D8D00
+     FMSG    FLS     "THIS IS A FLASHING MESSAGE"
+             HEX     8D8D00
+     IMSG    INV     "THIS IS A MESSAGE IN INVERSE"
+             HEX     8D8D00
+     NMSG    ASC     "THIS IS  NORMAL MESSAGE"
+             HEX     8D8D00
+
+
+7.5  The Macro Library
+
+A macro library with the example programs  is  included  in  source
+file  form  on  this  diskette.  The  purpose  of the library is to
+provide some guidance to the newcomer as to the utility of  macros.
+Once  macro  writing  is  mastered, one wonders why others consider
+macros difficult and "not worth the effort."
+
+NOTE" All macros are defined at the beginning of the  source  file,
+then  each  example  program  places  macros where they are needed.
+Conditionals are used to determine which example program is  to  be
+assembled.  The  KBD  opcode allows the user to make this selection
+from the keyboard during assembly.
+
+
+
+
+8.  Technical Information (highlights)
+
+The source is placed at START OF SOURCE when loaded, regard-
+less of its original address.
+
+
+8.1  The important pointers are:
+
+START OF SOURCE in $A,$B
+(set to $901 unless changed by CHRGEN70 or other)
+
+HlMEM: in $C,$D
+(defaults to $8000)
+
+END OF SOURCE in $E,$F
+
+When you exit to BASIC or to the monitor, these pointers are
+saved on the RAM card at $E00A-$E00F. They are restored upon
+re-entry to MERLIN.
+
+Entry into MERLIN replaces the current 1/0 hooks with the
+standard ones and reconnects DOS. This is the same as typing
+PR#0 and IN#0 from the keyboard. Entry to the EDITOR discon-
+nects DOS, so that you can use labels such as INIT without
+disastrous consequences. Re-entry to EXEC MODE disconnects
+any 1/0 hooks that you may have established via the editor's
+PR# command, and reconnects DOS. Exit from assembly (com-
+pletion of assembly or CTRL-C) also disconnects 1/0 hooks.
+
+
+8.2  General Information
+
+Re-entry after exit to BASIC is made by the "ASSEM" command.
+Simply use "ASSEM" wherever a DOS command is valid (for
+example. at the BASIC prompt). A BRUN MERLIN or a disk boot
+will also provide a warm re-entry and will not reload MERLIN
+if it is already there. A reload may be forced by typing
+BRUN BOOT ASM which would then be a cold entry. "destroying"
+any file in memory.
+
+Memory organization for ordinary sized files is of no concern
+to the user, but it is important to understand certain
+constraints for the handling of large files. MERLIN's HIMEM:
+(which defaults to $8000) is an upper limit to the source
+file. It is also an upper limit for PUT files. If a memory
+error occurs during assembly indicating a PUT line, it means
+the PUT file was too large to be placed in memory along with
+the PUT'ing file and indicates that HIMEM: will have to be
+increased.
+
+The default ORG and OBJ addresses equal the present value of
+MERLIN's HIMEM:. It is illegal to specify an OBJ address
+that is less than HIMEM except that a page 3 address is
+allowed. If a page 3 ($300-$3FF) OBJ address is used, the
+user MUST be careful that the file will not write over the
+DOS jumps at $3D0-$3FF as the assembler does NOT check for
+this error.
+
+If during assembly the object code exceeds BASIC HIMEM (or
+the SYM address, if one has been specified) then the code
+will not be written to memory, but assembly will appear to
+proceed as normal and its output sent to the screen or
+printer. The only clue that. this has happened, if not
+intentional, is that the OBJECT CODE SAVE command at EXEC
+level is disabled in this event. Therefore, if a listing for
+a very long file is desired, without actually creating code,
+the user can assemble over DOS and up (OBJ $A000 will do).
+
+
+8.3  Symbol Table
+
+The symbol table is printed after assembly unless LST OFF has
+been invoked. It is displayed first sorted alphabetically
+and then sorted numerically. The symbol table can be aborted
+at any time by pressing CTRL-C. Stopping it in this manner
+will have no ill effect on the object code which was gener-
+ated. The symbol table is flagged as follows:
+
+MD  Macro Definition
+M   Label defined within a Macro
+V   Variable (symbols starting with "]")
+?   A symbol that was defined but never referenced
+
+
+Internally. these are flagged by setting bits 7 to 4 of the
+symbol's length byte:
+
+MD  bit 5
+M   bit 4
+V   indicated by "]" preceding label name
+?   bit 5
+
+Also, bit 6 is set during the alphabetical printout to flag
+printed symbols, then removed during the numerical order
+printout. The symbol printout is formatted for an 80 column
+printer, or for one which will send a carriage return after
+40 columns.
+
+
+8.4  Error Messages
+
+BAD OPCODE
+Occurs when the opcode is not valid (perhaps misspelled)
+or the opcode is in the label column.
+
+BAD ADDRESS MODE
+The addressing mode is not a valid 6502 instruction; for
+example, JSR (LABEL) or LDX (LABEL),Y.
+
+BAD BRANCH
+A branch (BEQ, BCC, &c) to an address that is out of
+range, i.e. further away than
+NOTE: Most errors will throw off the assembler's
+address calculations. Bad branch errors should be
+ignored until previous errors have been dealt with.
+
+BAD OPERAND
+This occurs if the operand is illegally formed or if a
+label in the operand is not defined. This also occurs
+if you "EQU" a label to a zero page value after the
+label has been used. It may also mean that your operand
+is longer than 64 characters, or that a comment line
+exceeds 64 characters. This error will abort assembly.
+
+DUPLICATE SYMBOL
+On the first pass, the assembler finds two identical
+labels.
+
+MEMORY FULL
+This is usually caused by one of four conditions:
+Incorrect OBJ setting, source code too large, object
+code too large or symbol table too large. See "Special
+Note" at the end of this section.
+
+UNKNOWN LABEL
+Your program refers to a label that has not been
+defined. This also occurs if you try to reference a
+MACRO definition by anything other than PMC or �). It
+can also occur if the referenced label is in an area
+with conditional assemblyOFF. The latter will not
+happen with a MACRO definition.
+
+NOT MACRO
+Forward reference to a MACRO, or reference by PMC or �>
+to a label that is not a MACRO.
+
+NESTING ERROR
+Macros nested more than lS deep or conditionals nested
+more than 8 deep will generate this error.
+
+BAD "PUT"
+This Is caused bya PUT inside a macro or by a PUT
+inside another PUT fIle.
+
+BAD "SAV"
+This is caused by a SAV inside a macro or a SAV after a
+multiple OBJ after the last SAV.
+
+BAD INPUT
+This results from either no input ([RETURN] alone) or an
+input exceeding 37 characters in answer to the KBD op-
+code's request for the value of a label.
+
+BREAK
+This message is caused by the ERR opcode when the ex-
+pression in the operand is found to be non-zero.
+
+BAD LABEL
+This is caused by an unlabeled EQU or MAC, a label that
+is too long (greater than 13 characters) or one
+containing illegal characters (a label must begin with a
+character at least as large in ASCII value as the colon
+and may not contain any characters less than the digit
+zero).
+
+
+Special Note -MEMORY FULL Errors
+
+There are four common causes for the MEMORY FULL error mes-
+sage. A more detailed description of this problem and some
+ways to overcome it follow.
+
+MEMORY FULL IN LINE: xx. Generated during pass 1 of assembly
+(line number points to an OBJ instruction). CAUSE: An OBJ
+was specified that was below MERLIN's HIMEM: (normally $80
+and also not within Page 3. MERLIN will not allow you to put
+object code out of this range in order to protect your source
+file and the system. REMEDY: Remove the OBJ instruction or
+change it to specify an address within the legal range.
+
+MEMORY FULL IN LINE: xx. Generated during assembly. CAUSE:
+Too many symbols have been placed into the symbol table,
+causing it to exceed Applesoft's HIMEM (normally $9853 for
+the RAM card version and $6F53 for the 48K version). REMEDY:
+Make the symbol table larger by using the SYM command to
+lower its beginning address.
+
+ERR: MEMORY FULL. Generated immediately after you type in
+one line too many. CAUSE: The source code is too large and
+has exceeded MERLIN's HIMEM (normally $8000 on the RAM card
+version; $5000 on the 48K version). REMEDY: Raise MERLIN's
+HIMEM: (see the section on the HImem: command) or break the
+source file up into smaller sections and bring them in when
+necessary by using the "PUT" pseudo-op.
+
+ERROR MESSAGE: None, but no object code will be generated
+(there will be no OBJECT information displayed on the EXEC
+menu). CAUSE: Object code generated from an assembly would
+have exceeded the symbol table or Applesoft's HIMEM. Also
+can be caused by PUT file being too large. REMEDY: Lower
+MERLIN's HIMEM or write the object code directly to disk,
+using the DSK pseudo-op.
+
+When an error occurs on the first pass and while the
+assembler is processing a PUT file, the error message will
+indicate the line number preceded by ")" in the PUT file. To
+find which line of the main program was active (in effect
+telling you which PUT file the error occurred in) simply type
+"/"(RETURN) and quickly stop the listing. The first line
+listed will be the active line.
+
+
+
+
+9.  SOURCEROR
+
+9.1  Introduction
+
+Sourceror is a sophisticated, and after practice, an  easy  to  use
+disassembler designed as a subsidiary to create MERLIN source files
+out of binary programs, usually in a matter of  minutes.  SOURCEROR
+diassembles Sweet 16 code as well as 6502 code.
+
+The above is true. However, there are a  number  of  ways  you  can
+become  tripped  up  if you are not careful and think about the job
+you  are  undertaking.   In  general,  you  are  trying  to   fully
+understand   and/or   change  an  undocumented  program.  Prior  to
+undertaking the job of disassembling a large program  ($1000  bytes
+or  larger);  it  is  advised  that  you should practice on smaller
+programs where the documentation and/or understanding is  available
+from  computer  stores  or  friends.  The  256  bytes  of  the disk
+controller ROM that begins at address $C600 is a  challenge  worthy
+of  your  attention.   Through  reading  of  "Beneath Apple DOS" is
+almost  a  must  before  undertaking  any  but  the  most   trivial
+disassembles.   In  addition,  The  publication "call A.P.P.L.E. in
+depth- All about DOS" makes very interesting reading.
+
+The main part of SOURCEROR is called SRCRR.OBJ, but this can not be
+run  (conviently)  directly, since it may overwrite DOS buffers and
+crash the system. For this reason, a small program named  SOURCEROR
+is  provided.  It runs in the input buffer (where keyboard input is
+normally kept), and does not conflict with any program  in  memory.
+This  small  program  simply  checks  memory  size, gets rid of any
+programs such as PLE which would conflict with the  main  SOURCEROR
+program,  sets  MAXFILES = 1, then runs SRCRR.OBJ (at $8800-$9AA5).
+To minimize the possibility of accident, SRCRR.OBJ  has  a  default
+loading  location  of $4000 and if you BRUN it, it will just return
+without doing anything. If you try  to  BRUN  it  at  its  designed
+location  of  $8800,  however,  you  could  be  in for big trouble.
+SOURCEROR assumes the standard Apple screen is being used and  will
+not function with an 80 column card.
+
+The upshot of the above is "do it our way" and you "probably" won't
+get into trouble.
+
+
+9.2  Using SOURCEROR
+
+  1.  Load in the software to be disassembled. The most common  way
+      to  do  this is to use the command "BLOAD." It is possible to
+      boot some disks and then exit to  Applesoft  by  menu  and/or
+      reset key. The location where the program normally resides is
+      preferred if that doesn't interfere with where MERLIN or  one
+      of  its  tables  is going to be placed. See the memory map in
+      this section for a guide to Sourceror memory usage.
+
+      There are a number of ways that  the  loading  address  of  a
+      program can be found.
+
+         W Get the Beagle Brothers disk "Apple Mechanic" and  study
+           the  documentation for the program "byte zap." This will
+           allow you to follow the  linkage  from  the  catalog  on
+           track  $11  to  the  actual  track  and sector where the
+           binary  data  is  stored.  Referring  to  your  copy  of
+           "Beneath  Apple  DOS" (chapter 4) there are figures that
+           show how track/sector lists are configured and  how  and
+           where  the  starting  address  and  program  length  are
+           stored.
+
+         W Refer to the various "tip sheets" available with  Beagle
+           software.  They  are  chock full of tidbits that you are
+           going to need if you are going to cope with the  various
+           problems   encountered   in   disassembling   code.   In
+           particular, they will tell you the addresses to  inspect
+           after  a  BLOAD  that will give you the starting address
+           and program length. While this  might  seem  to  be  the
+           easier  approach  of  the  two  presented  so  far,  the
+           knowledge obtained is not nearly so great.
+
+         W Central Point Software  has  an  excellent  disk  called
+           "Copy  ][  Plus."  It is sold as an disk back up system.
+           However, the disk utilities  are  excellent.   For  this
+           discussion,  the  Catalog command is of interest. It has
+           an option that will print (screen or printer) the names,
+           starting  address,  and  program  length for each binary
+           file on the disk being cataloged.
+
+      While the Copy ][ Plus solution is most  attractive  from  an
+      individual  effort  standpoint.  It  is  not  the best from a
+      learning point of view (do buy the disk.  It  is  well  worth
+      it's modest price).
+
+  2.  Put the Merlin disk in drive 1 and type "BRUN SOURCEROR" When
+      the drive stops, take the Merlin disk out of drive 1.
+
+  3.  You will be told that the default address for the source file
+      is $2500. This was selected because it does not conflict with
+      the addresses  of  most  binary  programs  you  may  wish  to
+      disassemble.  Just hit RETURN to accept this default address.
+      Otherwise, specify (in Hex) the address you want.
+
+      You may also access a "secret" provision at this  point  (not
+      secret  anymore,  I'm about to blab it all out). This is done
+      by typing CTRL-S (for "SWEET")  after,  or  in  lieu  of  the
+      source  address.  You  will  be  asked  for  a (non standard)
+      address for the SWEET 16 interpreter.  This  is  intended  to
+      facilitate  the  disassembly  of  programs  which  use  a RAM
+      version of SWEET 16.
+
+  4.  Next you will be asked to hit RETURN if  the  program  to  be
+      disassembled  is in its original (running) location. If it is
+      NOT in its running location, then you must specify  (in  Hex)
+      the  code's  present  location. Finally, you will be asked to
+      provide the ORIGINAL location of that program.
+
+      When disassembling you must specify the ORIGINAL  address  of
+      the  program,  not the address where it currently resides. It
+      will appear that you are disassembling  the  program  at  its
+      original  location,  but actually, SOURCEROR is disassembling
+      the  code  at  its  present  location  and  translating   the
+      addresses.  This  is an important enough concept that we will
+      give a small example at this time:
+
+        a.  You specify that the program is NOW loaded at  location
+            $803.
+
+        b.  You further state that it normally resides at $2500.
+
+        c.  When you type your first L to begin  disassembly,  type
+            ----->   2500L   <-----  !!   If  you  type  803L,  the
+            disassembly will NOT be for the code  you  expected  to
+            disassemble.
+
+  5.  Lastly, the title page, which  contains  a  synopsis  of  the
+      commands available for disassembly will be displayed. You may
+      now start disassembling or using any of  the  other  commands
+      provided.   Your  first  command  must  be  prefixed  with  a
+      hexidecimal address.  Thereafter  this  is  optional,  as  is
+      explained in the "Command Description" of this manual.
+
+      At this point, and until the final processing,  you  may  hit
+      RESET  to  return  to  the  start  of  the  Sourceror program
+      (CNTRL-RESET Apple //e).  If you hit reset once  more,  prior
+      to  at least one disassembly command, you will exit Sourceror
+      to Basic. Using RESET assumes are using  the  autostart  ROM.
+      Please   note   that   RESET  will  cause  the  loss  of  all
+      disassembled code up to that point. This is a real  asset  if
+      you  have  become confused and wish to start over. If this is
+      not your intent, do not hit RESET!
+
+
+9.3  Commands Used in Disassembly
+
+The disassembly commands are very similar  to  those  used  by  the
+disassembler in the Apple monitor. All commands accept a four digit
+hex address before the command letter. If this number  is  omitted,
+the  the  disassembly  continues from its present address. The only
+time a number must be provided is upon initial entry.
+
+If you specify a number greater than the present address, a new ORG
+will be created.
+
+More commonly, you will specify an address less  than  the  present
+default  one.   In  this case the disassembler checks to see of the
+address  equals  the  address  of  one  of  the  lines   previously
+disassembled.  If  so,  it  simply  backs  up to that point. If the
+address is less than the present ORG, Sorceror  backs  up  to  that
+point  and creates a new ORG. All source lines are erased. This has
+the effect of hitting RESET and then specifying  the  new  starting
+address.
+
+It is almost always best to avoid new  ORG  statements.  When  this
+occurs,  back up a little more until you no longer get a new ORG on
+disassembly.
+
+
+9.4  Command Descriptions
+
+
+9.4.1  L (List)
+
+This is the main disassembly command. It disassembles 20  lines  of
+code  (not  bytes, lines) It may be repeated (e.g. 2000LLL <R> will
+disassemble 60 lines of code  starting  at  $2000).   By  the  same
+token,  2000L <R>, followed by LL <R>, will disassemble exactly the
+same amount of code.
+
+If L detects a "JSR" to the SWEET 16  interpreter,  disassembly  is
+automatically switched to the SWEET 16 mode.
+
+Command L always continues the present mode of  disassembly  (SWEET
+16 or normal).
+
+If an illegal opcode is encountered, the bell will  sound  and  the
+opcode  will be printed as three question marks in flashing format.
+This is only to call your attention to the situation. In the source
+code  itself,  unrecognized  opcodes are converted to HEX data, but
+not displayed on the screen.
+
+This brings up an interesting point. You and I know that the  Apple
+cannot  execute  "unknown"  opcodes.  What has happened is that the
+"opcode(s)" you see are really data that the  program  utilizes  in
+some  fashion or other.  Your job is to figure out what is going on
+here. The solution tends to be one of the following:
+
+  1.  The "opcodes" are preceded by a JSR to some address  and  the
+      opcodes following said JSR are data for that routine. If that
+      is the case, the end of data is some constant that the called
+      routine  can recognize. HEX $00 is the usual choice.  The hex
+      digits  preceding  the  end  code  could  be  data  or  ASCII
+      characters.   Context will tell you which. In the case of all
+      data, the "H" command is your choice. If  ASCII  is  involved
+      then  "T"  followed  by  "H"  for  the  end code would be the
+      choice.
+
+  2.  The "funny opcode(s) is preceded by a JMP. In this case,  the
+      opcodes  (BRKs  or  data)  could  be memory storage locations
+      (with/without pre-initialized data).
+
+Sometimes (always) you will tend to start hitting  the  L(LLL)  key
+and  RETURN  in  rapid  fashion.  Especially  when things are going
+"well." At some point you are going to realize that you are "out of
+step with the world." The solution is to do one of the following:
+
+  1.  Hit the RESET key and start all over. This happens often.
+
+  2.  Type xxxxL where xx is a "remembered"  address  where  things
+      were  "good."  This  is  the preferred mode. When you begin a
+      disassembly, have a sheet of  paper  and  a  writing  utensil
+      handy   so  you  can  jot  down  pertinent  thoughts  as  the
+      disassembly progress. One of the more "pertinent"  things  is
+      the address where things are "good."
+
+      Keep in mind that Sourceror takes the disassembly address YOU
+      give  it  as  gospel.  If  that  address  is wrong and yields
+      "funny" code, it is your fault, not Sourceor's.
+
+A final thought. Given that you have  loaded  the  correct  program
+into  memory  and that you disassemble the correct number of bytes,
+the resultant source will (almost always)  generate  the  "correct"
+(identical)  object  (see  the  exception in the "Final Processing"
+section that follows).
+That is not the point of SOURCEROR!
+With Sourceror you are trying to generate  source  code  that  will
+lead  to eventual understanding and/or modification.  Generation of
+source that is "garbage" and yet yields the identical  object  code
+as  the  original  is  of very little value.  There are a number of
+very fine copy programs on the market that could  of  achieved  the
+same purpose at much less personal cost.
+
+The above is provided to give you a taste of  what  disassembly  is
+all  about.   Often,  it  is  not nearly as difficult as presented.
+However,  there  are  times  when   the   above   is   an   extreme
+oversimplification of the problems you will encounter.
+
+
+9.4.2  S (Sweet)
+
+This is similar to L, but forces disassembly to start  in  SWEET  1
+mode.  SWEET  16 mode return to normal 6502 mode whenever the SWEET
+16 RTN opcode is encountered.
+
+
+9.4.3  N (Normal)
+
+his is the same as L, but forces disassembly to start  (return)  to
+normal 6502 mode.
+
+
+9.4.4  H (Hex)
+
+This creates the HEX data opcode. It defaults to one byte of  data.
+If  you  type a one or two digit hex number after H, that number of
+data bytes will be generated.
+
+
+9.4.5  T or TT (Text)
+
+T attempts to disassemble the data at the  current  address  as  an
+ASCII  string.   Depending  on  the  form  of  the  data, this will
+(automatically) disassemble under the pseudo opcode ASC, DCI,  INV,
+or  FLS.  The  appropriate  single  or  double  quote  ('  or ") is
+automatically chosen.  The  disassembly  will  end  when  the  data
+encountered is:
+
+  1.  inappropriate.
+
+  2.  When 62 characters have been treated (remember, MERLIN has  a
+      64 character limit. 62 + 2 delimiters = 64).
+
+  3.  the high bit of the data changes. In this case the ASC opcode
+      is changed to DCI.
+
+
+Sometimes the change to DCI is inappropriate. This  change  can  be
+defeated by using "TT" rather that "T" in the command.
+
+occasionally,  the  disassembled  string  may  not  stop   at   the
+appropriate  place because the following code looks like ASCII code
+to Sourceror. In this event, you may limit the number of characters
+put  into the string by placing a one or two digit hex number after
+the T (TT) command.
+
+Using the hex number or TT may have to be  used  to  establish  the
+correct  boundary between regular ASCII strings and a flashing one.
+It is usually obvious (the second time) where this should be done.
+
+Any lower case letters appearing in the text string  are  shown  as
+flashing upper case letters.
+
+
+9.4.6  W (Word)
+
+W disassembles the next two bytes at the  current  location  as  DA
+opcode.   Optional,  if  the  command  WW  is used, these bytes are
+disassembled as DDB opcode.  Finally, if W- is used as the command,
+the  two  bytes  are  disassembled in the form DA-1.  The latter is
+often the appropriate form where the program uses  the  address  by
+pushing it on the stack.
+
+You may detect this while disassembling, or after the  program  has
+been  disassembled. In the latter case, it may be to your advantage
+to do the disassembly again  with  some  notes  in  hand.  See  the
+recommendations in the explanation of the L command.
+
+
+9.5  Housekeeping Commands
+
+
+9.5.1  / (Cancel)
+
+This essentially cancels the last non / command. More  exactly,  it
+re-establishes  the  last  default  address (the address used for a
+command not necessarily attached to an address). This is an  useful
+convenience  which  allows  you  to ignore the typing of an address
+when a backing up  of  the  address  pointer  is  desired.   As  an
+example,  suppose  you type a "T" to disassemble some text. You may
+not know what to expect following the text, so you can just type  L
+to  look at it.  If the text turns out to followed by some hex data
+(such as $8D for a carriage return), simply type / to cancel the L.
+You the type the appropriate H command followed by the L.
+
+9.5.2  R (Read)
+
+R allows you to look at memory in a format that makes imbedded text
+stand out. R reads a block of $100, thus to look at data from $1234
+to $1333 type 1234R. After the initial R, will bring  up  the  next
+"page"  of  memory (page is quoted because pages generally begin at
+addresses with the two least significant digits = 00 and  end  with
+those  same two digits = FF. Not necessarily true for pages read by
+the R command).
+
+It is important to keep in mind that the numbers (address) you  use
+for  the  R  command  are  totally  independent  of the disassembly
+addresses. This has two impacts on you:
+
+  1.  The R command is NOT in step with the L or other  disassembly
+      commands.  This  means  that you have to type the initial hex
+      address or R will be reading far afield from where you want.
+
+  2.  The above was the bad news. Now for the good news. R does not
+      change  the  next default address for any other command. This
+      means that you can R(ead) all  over  the  place,  before,  or
+      after  L  commands  and  not change the next address L or any
+      other disassembly command uses.
+
+R is of particular use when unknown opcodes (???)  are  encountered
+by the L command.  Using the address noted down prior to the last L
+command you type the appropriate R command. This allows you to  see
+where  the  ASCII  characters  actually  begin so you can then type
+xxxxT[yy] to disassemble the ASCII characters.
+
+You may disassemble, then use (address)R, then  L  alone,  and  the
+disassembly will proceed just as if you never used R at all. If you
+don't intend  to  use  the  default  address  when  you  return  to
+disassembly,  it  may be wise to make a note on where you wanted to
+resume, or use the / command before the R. The latter  is  probably
+the wisest choice.
+
+
+9.5.3  Q (Quit)
+
+This ends disassembly and goes to the  final  processing  which  is
+automatic. If you type an address before the Q, the address pointer
+is backed to (but not including) that point before processing.  If,
+at the end of the disassembly, the disassembled lines include:
+
+     2341-   4C 03 E0        JMP $E003
+     2344    A9 BE 94        LDA $94BE,Y
+
+and the last line is just garbage, type 2344Q. This will cancel the
+last line, but retain the first (and all preceding).
+
+
+9.5.4  Final Processing
+
+After the Q command, the program does some last  minute  processing
+of  the  assembled  code.  If  you  hit RESET at this time you will
+return to BASIC and will lose the disassembled code.
+
+The processing may take a second or two for a short program, to two
+or three minutes for a long one. Be patient.
+
+When the processing is done, you are asked if you want to save  the
+source.  If  so,  you will be asked for a file name. Sourceror will
+append the suffix ".S" to this name and save it to disk.
+
+The drive used will be the one used to BRUN SOURCEROR. Replace  the
+Merlin disk first if you want the source to go onto another.
+
+To look at the disassembled source, BRUN MERLIN, or type ASSEM, and
+load it in.
+
+
+9.5.5  Dealing with the Finished Source
+
+In most cases, after you have some  experience,  and  assuming  you
+used reasonable care, the source will have few, if any, defects.
+
+You may notice that some DA's would have been more  appropriate  in
+the DA LABEL-1 or the DDB LABEL formats. In this and similar cases,
+it may be best to do the assembly again with some  notes  in  hand.
+The  disassembly  is  so  quick and painless, that it is often much
+easier than trying to alter the source appropriately.
+
+The source will have all the  exterior  or  otherwise  unrecognized
+symbols at the end in a table of equations. You should look at this
+table closely.  It should not contain any zero page equates  except
+one's  resulting  from  DA's, JMP's or JSR's. This is almost a sure
+sign of an error in the disassembly (yours, not  SOURCERROR's).  It
+may  of  resulted  from  an  attempt  to disassemble a data area as
+regular code.
+
+NOTE: If you try to assemble the source with zero page equates, you
+will  get  an  error  as  soon  as  the equates appear.  If, as you
+eventually should, you  move  the  equates  to  the  start  of  the
+program, you will cease getting errors, but the assembly MAY NOT BE
+CORRECT.  It is important to deal  with  this  situation  first  as
+trouble  could  occur  if,  for example, the disassembler finds the
+data AD 00 8D. It will disassemble correctly as LDA $008D.
+
+The assembler assembles this  code  as  a  zero  page  instruction,
+giving  the two bytes A5 8D.  This has shortened the program by one
+byte! Many relative branches can now be in error.
+
+The  assembler  always  assembles  such  code   as  a   zero   page
+instruction,  giving  the  two  bytes A5 8D. Occasionally, you will
+find a program  that  uses  the  AD 00 8D  form  for  a  zero  page
+instruction.  In  that  case,  you  will have to insert a character
+after the LDA opcode (LDAL) to have it assemble identically to  its
+original form. Please note that this is rarely the case, most often
+the "instruction" is really data and must be delt  with  by  either
+replacing  the incorrect opcode with the appropriate HEX, ASC, etc.
+opcode or by redoing the disassembly with notes in hand.
+
+The above has pointed out several important points:
+
+   W Go slowly at all  stages  and  take  time  to  understand  the
+     implications of each of your decisions.
+
+   W Be precise, double check everything. One  good  method  is  to
+     assemble the code and look at the length when you type "Q" and
+     exit to the Merlin command mode.  If the length  differs  from
+     the original then there is most certainly an error.
+
+   W If you wish to see just where the original and your version of
+     the code differ, there is an option in COPY ][ PLUS to "VERIFY
+     IDENTICAL FILES." This routine will tell you  the  first  byte
+     where the two files differ.
+
+   W Even if the file lengths are the same, it is still a good idea
+     to  compare the two object files to assure yourself that there
+     are not compensating errors that cause the length to come  out
+     correctly.
+
+One final comment, the binary load address and  length  fields  are
+part of the comparison done by COPY ][ PLUS. If the length is wrong
+then the two files will differ in the  second  or  third  byte.  In
+order  to  see  where  the real difference lies, you might consider
+using a sector  editor  to  change  the  length  on  the  SOURCEROR
+generated object to that of the original.
+
+Again, Beneath Apple DOS, et al, are your best friends in this type
+of situation.
+
+
+9.5.6  The Memory Full Message
+
+When the source file reaches within $600 of the start of  SOURCEROR
+(that is, when it goes beyond $8200) you will see "MEMORY FULL" and
+"HIT A KEY" in flashing format. When you hit a key  SOURCEROR  will
+go  directly to the final processing step.  The reason for the $600
+gap is that SOURCEROR needs a certain  amount  of  space  for  this
+final  processing.  It  is  possible  (but not likely) that part of
+SOURCEROR will be over written during final  processing,  but  this
+should not cause problems since the front end of SOURCEROR will not
+be used again by that point.
+
+There is a "secret" overide at the memory full point.  If  the  key
+you  hit  is  CTRL-O (for override), then SOURCEROR will return for
+another command. You can use this to  specify  the  desired  ending
+point.  You  can  also use it to go a little further than SOURCEROR
+wants you to, and disassemble a few  more  lines.   Obviously,  you
+should not carry this to extremes.
+
+Caution:  After exiting SOURCEROR, do not try to run it again  with
+a  CALL.  Instead,  run it again from disk. This is because the DOS
+buffers have been re-established upon exit, and will have partially
+destroyed SOURCEROR.
+
+
+9.5.7  The LABELER Program
+
+One of  the  nicest  features  of  the  SOURCEROR  program  is  the
+automatic assignment of labels to all recognizable addresses in the
+binary file being dissembled.  addresses are  recognized  by  being
+found  in a table which SOURCEROR references during the disassembly
+process. For example all JSR $FC58  instructions  within  a  binary
+file  will  be  listed  by  SOURCEROR  as  JSR HOME.  This table of
+address labels may be edited by using the program LABELER.
+
+To use  labeler,  BRUN  LABELER.  The  program  will  mention  that
+SRCRR.OBJ is being loaded into memory, and present the main program
+menu.
+
+
+9.6  Labeler Commands
+
+
+9.6.1  Q (Quit)
+
+When finished with any modifications you  wish  to  make  to  label
+table,  press  "Q"  to  exit  the LABELER program. You will then be
+presented with a screen that asks you to hit "S"  if  you  wish  to
+save  any  modifications you have made to file, if not hit "ESC" to
+exit without saving the table.  Be sure to read about the U command
+before attempting to save a labeler file.
+
+
+9.6.2  L (List)
+
+This command allows you to list the present contents of the labeler
+file.   After pressing L, hit any key to start the listing. At that
+point a  screens  worth  of  labels  will  be  presented  for  your
+scrntiny. When you have finished with that page, hit any key to see
+the next.  Typing CTRL-C will stop the listing.
+
+
+9.6.3  D (Delete Label(s))
+
+Use this option to delete any address labels you do not want in the
+list.  After entering the D command, simple enter the NUMBER of the
+label you no longer want. If you want to delete a range of  labels,
+enter  the  the  beginning and ending label numbers, separated by a
+comma. Note that the label numbers below  the  deleted  label  will
+change when a label(s) is deleted. Thus, you should delete from the
+back towards the front, or type L  to  list  the  file  after  each
+deletion so you can ascertain the new line number.
+
+
+9.6.4  A (Add Label)
+
+Use this command to add a new label to the list.  Simply  tell  the
+program  the  hex  address  and the name you wish to associate with
+that address. When finished, press the RETURN key only, to exit the
+Add mode.
+
+
+9.6.5  F (Free Space)
+
+Typing F  causes the program  to  tell  you  how  much  free  space
+remains  in the table for new label entries. The number returned is
+in bytes remaining, not the number of new labels that can be added.
+
+
+9.6.6  U (Unlock SRCRR.OBJ)
+
+Before saving a new label  table,  you  will  need  to  unlock  the
+SRCRR.OBJ  file.   Use this command before using the Q(uit) command
+if you intend to save a new file.
+
+
+               ---------------------------------|
+         $FFFF |                                |
+               |                                |
+         $D000 |                                |
+               |--------------------------------|
+         $CFFF |                                |
+               |           Apple I/O            |
+         $C000 |         Soft Switches          |
+               |--------------------------------|
+         $BFFF |                                |
+               |              DOS               |
+         $9AA6 |                                |
+               |--------------------------------|
+         $9AA5 |                                |
+               |           SRCRR.OBJ            |
+         $8800 |                                |
+               |--------------------------------|
+         $85FF |                                |
+               |                                |
+         $8200 |  SOURCEROR work area $600 bytes|
+               |--------------------------------|
+         $81FF |                                |
+               |                                |
+               |                                |
+               |      Disassembled Source       |
+         $2500 |                                |
+               |--------------------------------|
+         $24FF |                                |
+               |    Area available to load      |
+               |    programs for disassembly    |
+         $0800 |                                |
+               |--------------------------------|
+         $07FF |                                |
+               |   See technical information    |
+         $0000 |   section (section 8).         |
+               |--------------------------------|
