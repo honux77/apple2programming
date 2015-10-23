@@ -1,10 +1,10 @@
-;  ___           _        __ ___  __ ___
-; / __|_ _  __ _| |_____ / /| __|/  \_  )
-; \__ \ ' \/ _` | / / -_) _ \__ \ () / /
-; |___/_||_\__,_|_\_\___\___/___/\__/___|
+********************************
+*  SNAKE GAME BY HOYOUNG       *
+*  CHANGE DIRECTION: WASD      *
+*          honux77@gmail.com   *
+********************************
 
-; Change direction: W A S D
-
+APPLEL = $00
 define appleL         $00 ; screen location of apple, low byte
 define appleH         $01 ; screen location of apple, high byte
 define snakeHeadL     $10 ; screen location of snake head, low byte
