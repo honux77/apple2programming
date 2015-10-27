@@ -32,10 +32,13 @@ STA $0202
 * Y 레지스터: Y 인덱스 레지스터. X레지스터와 유사하지만 추가기능이 없다.
 * CPU STATUS 레지스터: CPU의 상태를 나타내는 레지스터. 각 비트와 초기값은 아래와 같다.
 * 자세한 내용은 http://www.obelisk.me.uk/6502/registers.html 참조
-
 ```
 NV-BDIZC
 00110000
+;N,V,Z,C: 컨디션 코드 플래그
+;B: BREAK FLAG
+;D: DECIMAL FLAG
+;I: INTERRUPT DISABLE FLAG
 ```
 
 ## 예제 코드 2
@@ -280,4 +283,4 @@ loop:
 end:
   BRK
 ```
-* JSR / RTS의 동작으로 보기 위해서는 PC 레지스터, SP 레지스터, 그리고 스택의 $01FE, $01FF에 저장되는 값을 잘 살펴보면 된다. 
+* JSR / RTS의 동작으로 보기 위해서는 PC 레지스터, SP 레지스터, 그리고 스택의 $01FE, $01FF에 저장되는 값을 잘 살펴보면 된다.
