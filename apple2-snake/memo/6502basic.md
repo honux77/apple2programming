@@ -36,9 +36,14 @@ STA $0202
 NV-BDIZC
 00110000
 ;N,V,Z,C: 컨디션 코드 플래그
+;N: NEGATIVE FLAG
+;V: OVERFLOW FLAG
+:Z: ZERO FLAG
+;C: CARRY FLAG
 ;B: BREAK FLAG
 ;D: DECIMAL FLAG
 ;I: INTERRUPT DISABLE FLAG
+
 ```
 
 ## 예제 코드 2
@@ -83,6 +88,8 @@ INX ;X레지스터의 값을 1 증가
 DEX ;X레지스터의 값을 1 감소
 INY ;자매품
 DEY ;자매품  
+CLC ;CLEAR CARRY
+
 ```
 
 # Day 2
