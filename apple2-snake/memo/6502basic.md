@@ -119,6 +119,12 @@ BNE label ;Branch Not Equal 비교한 값이 같지 않을 경우 (Z플래그가
 BEQ label ;Branch EQual 비교한 값이 같을 경우 지정된 라벨로 점프
 BCC label ;Branch on Carry Clear CPU Status의 캐리 플래그가 0일 경우 점프
 BCS label ;캐리플래그가 1일 경우 점프
+BEQ - Branch if the zero flag is set.
+BNE - Branch if the zero flag is clear.
+BMI - Branch if minus (N=1).
+BPL - Branch if plus (N=0).
+BVS - Branch if overflow is set (V=1).
+BVC - Branch if overflow is clear.
 ```
 
 # day 3

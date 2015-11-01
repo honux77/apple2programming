@@ -53,3 +53,5 @@ XCOORD EQU $800
        LDA #$0
        STA XCOORD
        STA XCOORD+$1
+
+## 예제 코드
